@@ -1,0 +1,58 @@
+# Coordinator State
+
+*Coordinator's own working memory across weekly reviews — the equivalent of `current_focus.md` but for the coordinator itself.*
+*Owned by: the coordinator (only edited during WEEKLY_REVIEW Phase 3 step 3.5).*
+*Read by: the coordinator at the start of every WEEKLY_REVIEW and by Domain Mentors with `Stakes: high_external` in their `current_focus.md`.*
+
+> **200-line cap.** When this file grows past 200 lines, overflow flushes to `coordinator_history/<YYYY>.md`. Keeps weekly-review cost bounded.
+
+---
+
+## Cross-Domain Risks
+
+*Items that affect more than one domain. Surfaced here so the coordinator weighs them when allocating time next week.*
+
+- (none currently)
+
+## Unresolved Trade-Offs
+
+*Decisions you've explicitly chosen to defer. Listed so they don't quietly become decisions-by-default.*
+
+- (none currently)
+
+## Capacity Warnings
+
+*Persistent capacity constraints the coordinator should respect. E.g. "Saturday low-energy after long week" or "evening slot is single-threaded — can't stack two domains there".*
+
+- (none currently)
+
+## High-Stakes Register
+
+*Domains where a misstep has high external cost (a customer call, a medical decision, a presentation, a parenting moment that matters). Domain mentors with these stakes read this file at PREPARE.*
+
+| Domain | Stake | Current state | Next checkpoint |
+|---|---|---|---|
+
+## Calibration Drift
+
+*Coordinator-observed drift in mentor calibration across domains. E.g. "fitness mentor has reduced difficulty 3 weeks in a row — investigate at next weekly review".*
+
+- (none currently)
+
+## Active Watches
+
+*Items the coordinator is actively watching this period. Each watch declares: what's being watched, what would close it, and the deadline. Auto-clears at WEEKLY_REVIEW Phase 3 step 3.5 unless re-flagged.*
+
+- (none currently)
+
+## Resolved This Period
+
+*Items moved out of the sections above during the most recent WEEKLY_REVIEW. Kept here for one cycle then dropped, so the next review can see what closed.*
+
+- (none currently)
+
+## Revision Log
+
+*Append-only. One line per WEEKLY_REVIEW Phase 3 step 3.5 run.*
+
+- YYYY-MM-DD — initial bootstrap.

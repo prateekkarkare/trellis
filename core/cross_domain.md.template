@@ -1,0 +1,36 @@
+# Cross-Domain Connections
+
+*Explicit map of how domains feed each other. Read by mentors during DOMAIN_SESSION when proposing work; read by coordinator during WEEKLY_REVIEW when allocating time.*
+*Owned by: this file. Editable by any mentor when they notice a new connection. Reviewed during WEEKLY_REVIEW.*
+
+> Bootstrap this once after init. Add bridges as you observe them — don't pre-fill speculative ones.
+
+---
+
+## Primary Bridges
+
+*Each bridge is one direction (`A → B`) or bidirectional (`A ↔ B`). One paragraph per bridge: what flows, why it compounds, what to watch for.*
+
+### <domain_a> → <domain_b>
+
+<one paragraph: what work in domain_a feeds domain_b, and how mentors should leverage this>
+
+### <domain_a> ↔ <domain_b>
+
+<one paragraph: what flows both ways>
+
+---
+
+## Cross-Domain Learning Transfers
+
+*Specific skills or insights that one domain produced and another now uses. Lets mentors give credit and avoid re-teaching.*
+
+- <skill> learned in <domain_a> → now used in <domain_b>
+
+---
+
+## Cross-Domain Scheduling Observations
+
+*Patterns the coordinator has noticed about how domains share (or compete for) the same time slots.*
+
+- <observation>

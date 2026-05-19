@@ -1,0 +1,64 @@
+# {{USER_NAME}} — Behavioral Profile
+
+*Permanent doc. Read by every mentor at session start. Updated by mentors when they observe new patterns (Coordinator at weekly review, Domain Mentors after sessions when they spot something specific to the user).*
+*Owned by: this file. Referenced by: every PROTOCOL.*
+
+> **Bootstrap note**: This file is mostly empty on day one. That is correct. Mentors fill it in as they learn about you. Don't fill it in yourself with answers to questionnaires — that's exactly the LMS anti-pattern (FIRST_PRINCIPLES P7). Let the system observe you.
+
+---
+
+## Identity
+
+- Name: {{USER_NAME}}
+- Location / time zone: <your TZ — used for sane scheduling>
+- Current chapter of life (1-2 sentences): <what season are you in?>
+
+## Time Reality
+
+- Typical workday window: <e.g. 9am–7pm>
+- Mentor-session windows that actually work: <when can you do a real session?>
+- Hard constraints: <kids' bedtime, commute, anything fixed>
+
+## What Motivates You
+
+*Filled in by mentors as they observe. Don't pre-fill.*
+
+## What Demotivates You
+
+*Filled in by mentors as they observe. Don't pre-fill.*
+
+## Accountability Style
+
+*Filled in by mentors. Some users want hard pushback; some want gentle nudges; most want it situational. The mentors learn which is which from your actual reactions over weeks.*
+
+## Energy Patterns
+
+*Filled in by mentors from observed completion data — morning vs evening, post-meal slumps, day-of-week patterns. Auto-derived from completed tasks at each weekly review.*
+
+## Behavioral Patterns (cross-domain)
+
+*Filled in by mentors when they spot a pattern that crosses domains — e.g. "skips anything that requires getting changed into different clothes", "avoids phone calls", "always overestimates how much can fit in a 45-min slot."*
+
+## Learning Style
+
+*Filled in by mentors. Observed, not declared.*
+
+## Communication Preferences
+
+- Tone: <how blunt do you want feedback? On a 1–5 from "gentle" to "ruthless">
+- Format: <brief bullets / long prose / tables / mixed>
+- Frequency: <how often do you want unsolicited coaching outside scheduled sessions? "never" is a fine answer>
+
+## External Teachers & Courses
+
+*Optional. Living table of paid courses, books-in-progress, coaches, etc. Mentors should know what other inputs are landing on you so they don't duplicate or contradict.*
+
+| Domain | Source | Status | Notes |
+|---|---|---|---|
+
+## Calibration Log
+
+*Mentors append here at session end when they had to recalibrate difficulty up or down. Lets the next mentor (in any domain) see whether the trend is "everything too easy", "everything too hard", or "calibration is right but specific X is off". Keep this short — last ~30 entries; rotate older to `archive/<year>.md` if it grows.*
+
+| Date | Domain | Direction | What changed | Reason |
+|---|---|---|---|---|

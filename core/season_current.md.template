@@ -1,0 +1,70 @@
+# Season {{SEASON_NUM}} — {{SEASON_START}} to {{SEASON_END}}
+
+*The currently-active season. Updated at the SEASON_TRANSITION protocol. Replaced wholesale at season end.*
+*Owned by: this file. Referenced by: every PROTOCOL when scheduling work.*
+
+A **season** is a fixed-duration arc (typically 90 days) with explicit exit criteria per active domain. It bounds ambition, forces choices about what's Active vs Silent right now, and creates a natural archive boundary. Without seasons the system sprawls.
+
+---
+
+## Domain States
+
+Every domain in your `mentors/` folder has exactly one state this season:
+
+- **Active** — gets a weekly mentor consultation, gets time on the calendar, gets archived at season end.
+- **Seeding** — gets reconnaissance / intel updates, may get a session or two, but is not on the main weekly cadence yet. Becomes Active in a future season or stays Seeding indefinitely.
+- **Silent** — not getting attention this season. Folder exists, files are preserved, no mentor agent spawned, no time budget allocated. Reactivated in a future season if you want.
+
+| Domain | State | Why this season | Exit criterion |
+|---|---|---|---|
+| <domain> | Active | <one line> | <observable, time-bounded> |
+| <domain> | Seeding | <one line> | (none for this season — graduates to Active later) |
+| <domain> | Silent | <one line> | (none — sleeping) |
+
+> The point of distinguishing **Seeding** from **Active** is honesty: most people have more interests than they can do real work in. Seeding domains get curiosity, not commitments.
+
+---
+
+## Interaction Protocol
+
+This is the high-level routing layer that `core/PROTOCOLS.md` builds on. Defaults:
+
+- Weekly review fires every Sunday. Monday slip is fine. Skipping two weeks in a row triggers `INACTIVITY_RECOVERY`.
+- Per-domain sessions are user-triggered ("let's do a session on <domain>"), not coordinator-pushed.
+- The coordinator only ever spawns mentor agents for Active and Seeding domains, never Silent.
+
+### Trigger quick-reference
+
+| User says | What runs |
+|---|---|
+| "weekly review" | WEEKLY_REVIEW protocol |
+| "let's do a session on <domain>" | DOMAIN_SESSION for that domain |
+| "refresh the mentors" | MENTOR_REFRESH protocol (pulls fresh intel into `intel.md`) |
+| "season review" or 1 week before season end | SEASON_TRANSITION protocol |
+| (silence for 14+ days) | INACTIVITY_RECOVERY on next interaction |
+
+---
+
+## Known Disruptions Log
+
+*Coordinator appends here whenever you mention travel, a holiday, a deadline, a sick week, etc. Helps next week's plan be realistic instead of a fantasy.*
+
+- YYYY-MM-DD — <disruption> — <impact on which domains>
+
+---
+
+## External Schedule Anchors (Locked Slots)
+
+*Non-negotiable commitments that bound the time budget. Coordinator must schedule around these, not over them.*
+
+| Day | Time | Domain | What it is |
+|---|---|---|---|
+
+---
+
+## Season {{SEASON_NUM}} Exit Criteria ({{SEASON_END}})
+
+*Per-domain: an observable, time-bounded outcome. At SEASON_TRANSITION the coordinator marks each Met ✅ / Partially Met ⚠️ / Not Met ❌ with one-line reasoning.*
+
+- **<domain>**: <criterion>
+- **<domain>**: <criterion>

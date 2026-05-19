@@ -1,0 +1,59 @@
+# ----------------------------------------------------------------------------
+# Trellis connectors — example config
+# ----------------------------------------------------------------------------
+# Copy to `connectors.yml` (which is gitignored) and edit.
+# Anything listed here becomes a signal source for the WEEKLY_REVIEW protocol.
+# Comment out any connector you don't use; protocols degrade gracefully.
+# ----------------------------------------------------------------------------
+
+connectors:
+
+  # --- Todoist — task completion data, comments, reschedules ---------------
+  todoist:
+    enabled: false
+    type: mcp                        # mcp | flatfile | api
+    role: primary_task_signal        # used by WEEKLY_REVIEW Phase 1
+    mcp_server: todoist              # name registered with your LLM client
+    auth:
+      api_key: ${TODOIST_API_KEY}    # resolved at runtime from env
+    options:
+      lookback_days: 7
+      include_completed: true
+      include_comments: true         # the most valuable signal — your voice
+      include_rescheduled: true
+
+  # --- Calendar — locked external commitments ------------------------------
+  calendar:
+    enabled: false
+    type: api                        # google-cal, caldav, outlook, etc.
+    role: schedule_anchors           # used by WEEKLY_REVIEW Phase 4 (scheduling)
+    provider: google                 # google | apple | outlook | caldav
+    auth:
+      credentials_path: ~/.config/trellis/google-cal.json
+    options:
+      calendars: [primary]
+      lookahead_days: 14
+      timezone: ${TIMEZONE}
+
+  # --- Slack — work context, sentiment, off-hours signal -------------------
+  slack:
+    enabled: false
+    type: mcp
+    role: work_context
+    mcp_server: slack
+    auth:
+      bot_token: ${SLACK_BOT_TOKEN}
+    options:
+      channels: []                   # leave empty to skip — only watch a few
+      lookback_days: 7
+      include_dms: false
+      include_reactions: true
+
+  # --- Add your own ---------------------------------------------------------
+  # <name>:
+  #   enabled: true
+  #   type: flatfile
+  #   role: <what-signal-this-provides>
+  #   options:
+  #     path: connectors/<name>/data/
+  #     glob: '*.json'

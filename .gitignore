@@ -1,0 +1,43 @@
+# ----------------------------------------------------------------------------
+# Trellis .gitignore
+# ----------------------------------------------------------------------------
+# This file ignores user-generated personal content so the distribution repo
+# stays clean. After running scripts/init.sh, your personal notebook is
+# created in a sibling directory (default: ../my-notebook) which has its own
+# git repo. Nothing personal should end up in *this* repo.
+# ----------------------------------------------------------------------------
+
+# macOS
+.DS_Store
+._*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Init artifacts (in case someone runs init.sh inside the repo by mistake)
+my-notebook/
+notebook/
+.trellis-init-config
+
+# Connector secrets (never commit credentials)
+connectors/**/*.secret
+connectors/**/*.local
+connectors/**/.env
+connectors/connectors.yml
+!connectors/connectors.example.yml
+
+# Logs
+*.log
+
+# Node / Python / language detritus (in case adapters use them)
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Backup files from sed -i ''
+*.bak
