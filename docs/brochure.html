@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Trellis — your mentor team, on the LLM you already use.</title>
+<style>
+  :root {
+    --bg: #07090d;
+    --bg-2: #0c1117;
+    --panel: #11171f;
+    --panel-2: #161e29;
+    --line: #1f2935;
+    --line-2: #2a3849;
+    --ink: #f1f5fb;
+    --dim: #8a98ab;
+    --mute: #5b6776;
+    --sky: #7dd3fc;
+    --violet: #a78bfa;
+    --emerald: #34d399;
+    --amber: #fbbf24;
+    --rose: #fb7185;
+    --r-lg: 18px;
+    --r-md: 12px;
+    --r-sm: 8px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  code, pre, .mono { font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; }
+  a { color: var(--sky); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  ::selection { background: var(--violet); color: #fff; }
+
+  h1, h2, h3, h4 { margin: 0; line-height: 1.05; letter-spacing: -0.025em; font-weight: 700; }
+  h1 { font-size: clamp(2.6rem, 7vw, 5.6rem); }
+  h2 { font-size: clamp(2rem, 4.5vw, 3.4rem); letter-spacing: -0.03em; }
+  h3 { font-size: 1.5rem; letter-spacing: -0.01em; font-weight: 600; }
+  p  { margin: 0; color: var(--dim); }
+  .grad-sky  { background: linear-gradient(90deg,#7dd3fc 0%,#a78bfa 50%,#fb7185 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grad-warm { background: linear-gradient(90deg,#fbbf24,#fb7185 60%,#a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .kicker { color: var(--dim); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+  .wrap-tight { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  section { padding: 140px 0; position: relative; }
+  section.tight { padding: 90px 0; }
+
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px; border-radius: 999px;
+    background: var(--ink); color: #07090d;
+    font-weight: 600; font-size: 0.95rem;
+    transition: transform .15s, opacity .15s;
+  }
+  .cta:hover { transform: translateY(-1px); text-decoration: none; opacity: .94; }
+  .cta.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line-2); }
+  .cta.ghost:hover { border-color: #46566b; }
+
+  .hero {
+    padding: 160px 0 120px;
+    background:
+      radial-gradient(1100px 700px at 75% -10%, rgba(167,139,250,0.25), transparent 60%),
+      radial-gradient(900px 600px at -10% 20%, rgba(125,211,252,0.18), transparent 60%),
+      radial-gradient(800px 500px at 100% 100%, rgba(251,113,133,0.12), transparent 70%),
+      var(--bg);
+    overflow: hidden;
+  }
+  .hero .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border: 1px solid var(--line-2);
+    border-radius: 999px; background: rgba(255,255,255,0.02);
+    color: var(--ink); font-size: 0.78rem; letter-spacing: 0.12em;
+    text-transform: uppercase; font-weight: 600; margin-bottom: 28px;
+  }
+  .hero .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 12px var(--emerald); }
+  .hero h1 { max-width: 14ch; }
+  .hero .sub { margin-top: 26px; font-size: clamp(1.05rem, 1.6vw, 1.35rem); color: var(--dim); max-width: 50ch; line-height: 1.5; }
+  .hero .sub em { color: var(--ink); font-style: normal; font-weight: 500; }
+  .hero .ctas { margin-top: 42px; display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .stats .s { padding: 36px 28px; background: var(--bg); display: flex; flex-direction: column; gap: 6px; }
+  .stats .s .num { font-size: clamp(2.4rem, 4.5vw, 3.4rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  .stats .s .lbl { color: var(--dim); font-size: 0.92rem; }
+  @media (max-width: 880px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+  .frame {
+    border-radius: var(--r-lg);
+    background: linear-gradient(180deg, var(--panel) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--line);
+    padding: 36px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 4px 14px rgba(0,0,0,0.3);
+  }
+  .frame svg { width: 100%; height: auto; display: block; }
+
+  .glyph-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--line); border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line);
+  }
+  @media (max-width: 980px) { .glyph-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .glyph-grid { grid-template-columns: 1fr; } }
+  .glyph-grid .g {
+    background: var(--bg-2);
+    padding: 38px 30px 34px;
+    display: flex; flex-direction: column; gap: 14px;
+    min-height: 230px;
+    transition: background .2s;
+  }
+  .glyph-grid .g:hover { background: var(--panel); }
+  .glyph-grid .g .icon {
+    width: 44px; height: 44px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(125,211,252,0.10); color: var(--sky);
+    border: 1px solid rgba(125,211,252,0.25);
+  }
+  .glyph-grid .g.violet .icon  { background: rgba(167,139,250,0.10); color: var(--violet);  border-color: rgba(167,139,250,0.28); }
+  .glyph-grid .g.emerald .icon { background: rgba(52,211,153,0.10);  color: var(--emerald); border-color: rgba(52,211,153,0.28); }
+  .glyph-grid .g.amber .icon   { background: rgba(251,191,36,0.10);  color: var(--amber);   border-color: rgba(251,191,36,0.28); }
+  .glyph-grid .g.rose .icon    { background: rgba(251,113,133,0.10); color: var(--rose);    border-color: rgba(251,113,133,0.28); }
+  .glyph-grid .g h3 { letter-spacing: -0.015em; }
+  .glyph-grid .g p  { color: var(--dim); font-size: 0.97rem; }
+  .glyph-grid .g .tag { margin-top: auto; font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mute); }
+
+  .loop-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--line); border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line);
+  }
+  @media (max-width: 880px) { .loop-strip { grid-template-columns: 1fr 1fr; } }
+  .loop-strip .step { background: var(--bg-2); padding: 32px 26px; display: flex; flex-direction: column; gap: 8px; min-height: 180px; }
+  .loop-strip .step .n { font-size: 2.6rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--violet); margin-bottom: 6px; }
+  .loop-strip .step h4 { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
+  .loop-strip .step p  { font-size: 0.92rem; color: var(--dim); }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 880px) { .two { grid-template-columns: 1fr; } }
+  .tile {
+    border-radius: var(--r-lg); border: 1px solid var(--line);
+    background: var(--bg-2); padding: 38px 32px; position: relative; overflow: hidden;
+  }
+  .tile h3 { font-size: 1.8rem; margin-bottom: 14px; }
+  .tile p  { font-size: 1rem; color: var(--dim); }
+  .tile .badge { position: absolute; top: 24px; right: 28px; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mute); }
+  .tile.left  { border-top: 3px solid var(--sky);   }
+  .tile.right { border-top: 3px solid var(--amber); }
+
+  .conn { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+  @media (max-width: 1100px) { .conn { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 620px)  { .conn { grid-template-columns: repeat(2, 1fr); } }
+  .conn .c {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--r-md); padding: 22px 18px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    transition: border-color .15s;
+  }
+  .conn .c:hover { border-color: var(--line-2); }
+  .conn .c .logo {
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    border-radius: 10px; background: var(--panel-2); color: var(--ink); font-weight: 700;
+  }
+  .conn .c .name { font-weight: 600; }
+  .conn .c .meta { font-size: 0.78rem; color: var(--mute); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .pull { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; max-width: 24ch; color: var(--ink); }
+  .pull .accent { color: var(--violet); }
+
+  .term { background: #06080c; border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .term .bar { background: var(--panel); padding: 11px 16px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--line); }
+  .term .bar .dot { width: 11px; height: 11px; border-radius: 50%; background: #3a4554; }
+  .term .bar .dot:nth-child(1) { background: #ff5f57; }
+  .term .bar .dot:nth-child(2) { background: #febc2e; }
+  .term .bar .dot:nth-child(3) { background: #28c840; }
+  .term .bar .ttl { margin-left: 12px; color: var(--mute); font-size: 0.82rem; }
+  .term pre { margin: 0; padding: 26px 28px; color: #cad5e6; font-size: 0.94rem; line-height: 1.7; overflow-x: auto; }
+  .term .c { color: var(--mute); }
+  .term .k { color: var(--sky); }
+  .term .s { color: var(--emerald); }
+
+  .head { display: flex; flex-direction: column; gap: 18px; margin-bottom: 56px; max-width: 800px; }
+
+  footer { padding: 60px 0 80px; border-top: 1px solid var(--line); color: var(--mute); font-size: 0.92rem; }
+  footer .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  footer a { color: var(--dim); margin-left: 18px; }
+
+  .t-ink  { fill: var(--ink); font-weight: 600; }
+  .t-dim  { fill: var(--dim); }
+  .t-mono { fill: var(--dim); font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+</style>
+</head>
+<body>
+
+<!-- ─────── HERO ─────── -->
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span> Trellis · v0.1 · open source</span>
+    <h1>Your mentor team.<br/><span class="grad-sky">On the LLM you already use.</span></h1>
+    <p class="sub">
+      <em>A trellis holds a plant up. It doesn't tell it where to grow.</em><br/>
+      A markdown-native framework for a multi-year coaching relationship with a team of expert AI mentors —
+      across every domain of your life.
+    </p>
+    <div class="ctas">
+      <a class="cta" href="https://github.com/prateekkarkare/trellis">Get Trellis →</a>
+      <a class="cta ghost" href="#how">See how it works</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────── STAT STRIP ─────── -->
+<div class="stats">
+  <div class="s"><div class="num grad-sky">1</div><div class="lbl">framework</div></div>
+  <div class="s"><div class="num grad-warm">N</div><div class="lbl">specialist mentors</div></div>
+  <div class="s"><div class="num grad-sky">4</div><div class="lbl">protocol operations</div></div>
+  <div class="s"><div class="num grad-warm">∞</div><div class="lbl">years of journal</div></div>
+</div>
+
+<!-- ─────── HOW IT WORKS ─────── -->
+<section id="how">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">How it works</span>
+      <h2>Three layers. One folder of markdown.</h2>
+    </div>
+
+    <div class="frame">
+      <svg viewBox="0 0 1100 380" xmlns="http://www.w3.org/2000/svg" aria-label="Three-layer architecture">
+        <defs>
+          <linearGradient id="gClient" x1="0" x2="1"><stop offset="0" stop-color="#7dd3fc" stop-opacity="0.18"/><stop offset="1" stop-color="#7dd3fc" stop-opacity="0.04"/></linearGradient>
+          <linearGradient id="gCoord"  x1="0" x2="1"><stop offset="0" stop-color="#a78bfa" stop-opacity="0.22"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0.04"/></linearGradient>
+          <linearGradient id="gNote"   x1="0" x2="1"><stop offset="0" stop-color="#34d399" stop-opacity="0.16"/><stop offset="1" stop-color="#34d399" stop-opacity="0.02"/></linearGradient>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#a78bfa"/>
+          </marker>
+        </defs>
+
+        <rect x="40" y="40" width="280" height="100" rx="14" fill="url(#gClient)" stroke="#7dd3fc" stroke-opacity="0.45"/>
+        <text x="180" y="78" text-anchor="middle" class="t-ink" font-size="18">Your LLM Client</text>
+        <text x="180" y="104" text-anchor="middle" class="t-dim" font-size="13">Claude · ChatGPT · Copilot · …</text>
+        <text x="180" y="124" text-anchor="middle" class="t-mono" font-size="11">drives the conversation</text>
+
+        <rect x="410" y="20" width="280" height="140" rx="16" fill="url(#gCoord)" stroke="#a78bfa" stroke-opacity="0.55"/>
+        <text x="550" y="60" text-anchor="middle" class="t-ink" font-size="18">Coordinator</text>
+        <text x="550" y="86" text-anchor="middle" class="t-dim" font-size="13">runs reviews · resolves conflicts</text>
+        <text x="550" y="108" text-anchor="middle" class="t-dim" font-size="13">tracks goals · schedules time</text>
+        <text x="550" y="138" text-anchor="middle" class="t-mono" font-size="11">PA / personal assistant</text>
+
+        <g>
+          <rect x="780" y="10"  width="260" height="56" rx="10" fill="rgba(52,211,153,0.10)"  stroke="#34d399" stroke-opacity="0.4"/>
+          <text x="800" y="42" class="t-ink" font-size="14">Fitness mentor</text>
+          <text x="1020" y="42" text-anchor="end" class="t-mono" font-size="11">specialist</text>
+        </g>
+        <g>
+          <rect x="780" y="76"  width="260" height="56" rx="10" fill="rgba(125,211,252,0.10)" stroke="#7dd3fc" stroke-opacity="0.4"/>
+          <text x="800" y="108" class="t-ink" font-size="14">Writing mentor</text>
+          <text x="1020" y="108" text-anchor="end" class="t-mono" font-size="11">specialist</text>
+        </g>
+        <g>
+          <rect x="780" y="142" width="260" height="56" rx="10" fill="rgba(251,191,36,0.10)" stroke="#fbbf24" stroke-opacity="0.4"/>
+          <text x="800" y="174" class="t-ink" font-size="14">Finances mentor</text>
+          <text x="1020" y="174" text-anchor="end" class="t-mono" font-size="11">specialist</text>
+        </g>
+        <g>
+          <rect x="780" y="208" width="260" height="56" rx="10" fill="rgba(251,113,133,0.10)" stroke="#fb7185" stroke-opacity="0.4"/>
+          <text x="800" y="240" class="t-ink" font-size="14">Parenting mentor</text>
+          <text x="1020" y="240" text-anchor="end" class="t-mono" font-size="11">specialist</text>
+        </g>
+
+        <rect x="40" y="220" width="650" height="140" rx="16" fill="url(#gNote)" stroke="#34d399" stroke-opacity="0.4"/>
+        <text x="64" y="254" class="t-ink" font-size="16">Your Notebook</text>
+        <text x="64" y="278" class="t-mono" font-size="12">CONFIG.md · profile.md · framework/PROTOCOLS.md</text>
+        <text x="64" y="298" class="t-mono" font-size="12">mentors/season_current · coordinator_state · cross_domain</text>
+        <text x="64" y="318" class="t-mono" font-size="12">mentors/&lt;domain&gt;/{ curriculum, focus, log, sessions/, archive/ }</text>
+        <text x="64" y="346" class="t-dim" font-size="11">plain markdown · git-tracked · yours forever</text>
+
+        <line x1="320" y1="90"  x2="405" y2="90"  stroke="#a78bfa" stroke-width="1.6" marker-end="url(#ar)"/>
+        <line x1="690" y1="70"  x2="775" y2="38"  stroke="#a78bfa" stroke-width="1.4" marker-end="url(#ar)"/>
+        <line x1="690" y1="90"  x2="775" y2="104" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#ar)"/>
+        <line x1="690" y1="110" x2="775" y2="170" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#ar)"/>
+        <line x1="690" y1="130" x2="775" y2="236" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#ar)"/>
+        <line x1="550" y1="160" x2="550" y2="218" stroke="#34d399" stroke-width="1.4" stroke-dasharray="4,4"/>
+        <line x1="910" y1="264" x2="910" y2="330" stroke="#34d399" stroke-width="1.4"/>
+        <line x1="910" y1="330" x2="690" y2="330" stroke="#34d399" stroke-width="1.4" marker-end="url(#ar)"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────── FEATURES ─────── -->
+<section class="tight">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">What makes it different</span>
+      <h2>Built for the long run.</h2>
+    </div>
+
+    <div class="glyph-grid">
+
+      <div class="g">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 4 21 10 15 10"/></svg>
+        </div>
+        <h3>Self-improving mentors</h3>
+        <p>Every 4 weeks each mentor re-reads recent sessions, pulls fresh intel, critiques itself, and rewrites its expertise.</p>
+        <div class="tag">mentor_refresh</div>
+      </div>
+
+      <div class="g violet">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+        </div>
+        <h3>Critical thinking, every time</h3>
+        <p>Five-question skepticism pass before any plan ships. Weekly drift check audits the notebook for stale claims.</p>
+        <div class="tag">drift_check</div>
+      </div>
+
+      <div class="g amber">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Coordinator resolves conflicts</h3>
+        <p>Three mentors competing for one budget? The PA surfaces the trade-off — you decide. Decisions logged forever.</p>
+        <div class="tag">cross_domain.md</div>
+      </div>
+
+      <div class="g rose">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+        <h3>Add a mentor in one command</h3>
+        <p>Spin up a new domain in 30 seconds. Active, Seeding, or Silent per season. Archive gracefully — data persists.</p>
+        <div class="tag">add-domain.sh</div>
+      </div>
+
+      <div class="g emerald">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Flexible goals &amp; time budgets</h3>
+        <p>Seasons, weekly floors, daily ceilings — all advisory inputs. Tune any time in <span class="mono">CONFIG.md</span>.</p>
+        <div class="tag">season_current.md</div>
+      </div>
+
+      <div class="g violet">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Honest progress tracking</h3>
+        <p>Five canonical layers per domain compress as you advance. No streaks. No XP. Just prose that tells the truth.</p>
+        <div class="tag">log.md → archive</div>
+      </div>
+
+      <div class="g amber">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1 0-4h12v4"/><path d="M4 6v12a2 2 0 0 0 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>
+        </div>
+        <h3>Connect everything</h3>
+        <p>Todoist, Calendar, Slack ship as stubs. Any HTTP source becomes a connector via one YAML. Secrets stay local.</p>
+        <div class="tag">connectors.yml</div>
+      </div>
+
+      <div class="g emerald">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3>Markdown is the source of truth</h3>
+        <p>No database. No vendor. Your data is readable in 2056 by tools that don't exist yet. Git from day one.</p>
+        <div class="tag">P1 · constitution</div>
+      </div>
+
+      <div class="g rose">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </div>
+        <h3>Two run modes</h3>
+        <p><strong style="color:var(--ink)">checkpoints</strong> — mentor pauses for approval. <strong style="color:var(--ink)">automated</strong> — runs end-to-end, delivers an auditable report.</p>
+        <div class="tag">PROTOCOL_MODE</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────── THE LOOP ─────── -->
+<section class="tight">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Every session</span>
+      <h2>Prepare. Coach. Journal. Audit.</h2>
+    </div>
+
+    <div class="loop-strip">
+      <div class="step"><div class="n">01</div><h4>Prepare</h4><p>Reads done topics, current focus, curriculum, recent log. Walks in informed.</p></div>
+      <div class="step"><div class="n">02</div><h4>Coach</h4><p>Conversation. Pushes back. Calibrates difficulty into the flow zone.</p></div>
+      <div class="step"><div class="n">03</div><h4>Journal</h4><p>Writes the session, updates the catalog, advances the focus sheet.</p></div>
+      <div class="step"><div class="n">04</div><h4>Audit</h4><p>Weekly review catches drift, contradictions, abandoned threads.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────── SELF-IMPROVEMENT ─────── -->
+<section class="tight">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Self-improvement loop</span>
+      <h2>Mentors that <span class="grad-sky">sharpen themselves.</span></h2>
+    </div>
+
+    <div class="frame">
+      <svg viewBox="0 0 1100 240" xmlns="http://www.w3.org/2000/svg" aria-label="Mentor refresh loop">
+        <defs>
+          <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#a78bfa"/>
+          </marker>
+        </defs>
+        <g>
+          <circle cx="120" cy="100" r="50" fill="rgba(125,211,252,0.10)" stroke="#7dd3fc" stroke-opacity="0.5"/>
+          <text x="120" y="96" text-anchor="middle" class="t-ink" font-size="15">read</text>
+          <text x="120" y="118" text-anchor="middle" class="t-dim" font-size="11">recent sessions</text>
+        </g>
+        <g>
+          <circle cx="340" cy="100" r="50" fill="rgba(125,211,252,0.10)" stroke="#7dd3fc" stroke-opacity="0.5"/>
+          <text x="340" y="96" text-anchor="middle" class="t-ink" font-size="15">gather</text>
+          <text x="340" y="118" text-anchor="middle" class="t-dim" font-size="11">fresh intel</text>
+        </g>
+        <g>
+          <circle cx="560" cy="100" r="50" fill="rgba(167,139,250,0.10)" stroke="#a78bfa" stroke-opacity="0.5"/>
+          <text x="560" y="96" text-anchor="middle" class="t-ink" font-size="15">critique</text>
+          <text x="560" y="118" text-anchor="middle" class="t-dim" font-size="11">what's stale?</text>
+        </g>
+        <g>
+          <circle cx="780" cy="100" r="50" fill="rgba(167,139,250,0.10)" stroke="#a78bfa" stroke-opacity="0.5"/>
+          <text x="780" y="96" text-anchor="middle" class="t-ink" font-size="15">rewrite</text>
+          <text x="780" y="118" text-anchor="middle" class="t-dim" font-size="11">intel.md</text>
+        </g>
+        <g>
+          <circle cx="990" cy="100" r="50" fill="rgba(52,211,153,0.10)" stroke="#34d399" stroke-opacity="0.5"/>
+          <text x="990" y="96" text-anchor="middle" class="t-ink" font-size="15">brief you</text>
+          <text x="990" y="118" text-anchor="middle" class="t-dim" font-size="11">deltas only</text>
+        </g>
+        <line x1="170" y1="100" x2="285" y2="100" stroke="#a78bfa" stroke-width="1.6" marker-end="url(#ar2)"/>
+        <line x1="390" y1="100" x2="505" y2="100" stroke="#a78bfa" stroke-width="1.6" marker-end="url(#ar2)"/>
+        <line x1="610" y1="100" x2="725" y2="100" stroke="#a78bfa" stroke-width="1.6" marker-end="url(#ar2)"/>
+        <line x1="830" y1="100" x2="935" y2="100" stroke="#a78bfa" stroke-width="1.6" marker-end="url(#ar2)"/>
+        <path d="M 990 155 Q 990 210 555 210 Q 120 210 120 155" stroke="#5b6776" stroke-dasharray="5,5" stroke-width="1.4" fill="none" marker-end="url(#ar2)"/>
+        <text x="555" y="225" text-anchor="middle" class="t-dim" font-size="12">every 4 weeks · configurable per mentor</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────── COORDINATOR SCENE ─────── -->
+<section class="tight">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Coordinator ↔ mentor</span>
+      <h2>Three demands. One budget. <span class="grad-warm">You decide.</span></h2>
+    </div>
+
+    <div class="frame">
+      <svg viewBox="0 0 1100 300" xmlns="http://www.w3.org/2000/svg" aria-label="Conflict resolution">
+        <defs>
+          <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#fbbf24"/>
+          </marker>
+        </defs>
+        <g>
+          <rect x="40" y="30" width="240" height="62" rx="10" fill="rgba(52,211,153,0.10)" stroke="#34d399" stroke-opacity="0.5"/>
+          <text x="60" y="58" class="t-ink" font-size="14">Fitness</text>
+          <text x="60" y="78" class="t-dim" font-size="12">"5 sessions next week."</text>
+        </g>
+        <g>
+          <rect x="40" y="118" width="240" height="62" rx="10" fill="rgba(125,211,252,0.10)" stroke="#7dd3fc" stroke-opacity="0.5"/>
+          <text x="60" y="146" class="t-ink" font-size="14">Writing</text>
+          <text x="60" y="166" class="t-dim" font-size="12">"3 deep-work blocks."</text>
+        </g>
+        <g>
+          <rect x="40" y="206" width="240" height="62" rx="10" fill="rgba(251,191,36,0.10)" stroke="#fbbf24" stroke-opacity="0.5"/>
+          <text x="60" y="234" class="t-ink" font-size="14">Parenting</text>
+          <text x="60" y="254" class="t-dim" font-size="12">"Evenings protected."</text>
+        </g>
+
+        <rect x="400" y="80" width="280" height="140" rx="14" fill="rgba(167,139,250,0.12)" stroke="#a78bfa" stroke-opacity="0.6"/>
+        <text x="540" y="118" text-anchor="middle" class="t-ink" font-size="17">Coordinator</text>
+        <text x="540" y="146" text-anchor="middle" class="t-dim" font-size="12">budget: 180 min/weekday</text>
+        <text x="540" y="166" text-anchor="middle" class="t-dim" font-size="12">3 demands &gt; 1 budget</text>
+        <text x="540" y="196" text-anchor="middle" class="t-ink" font-size="13" font-style="italic">surfaces the trade-off</text>
+
+        <rect x="800" y="80" width="260" height="140" rx="14" fill="rgba(125,211,252,0.10)" stroke="#7dd3fc" stroke-opacity="0.6"/>
+        <text x="930" y="118" text-anchor="middle" class="t-ink" font-size="17">You</text>
+        <text x="930" y="146" text-anchor="middle" class="t-dim" font-size="12">fitness × 4 · writing × 2</text>
+        <text x="930" y="166" text-anchor="middle" class="t-dim" font-size="12">parenting wins evenings</text>
+        <text x="930" y="196" text-anchor="middle" class="t-ink" font-size="13" style="fill:#34d399">decision logged</text>
+
+        <line x1="280" y1="60"  x2="395" y2="120" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#ar3)"/>
+        <line x1="280" y1="148" x2="395" y2="148" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#ar3)"/>
+        <line x1="280" y1="238" x2="395" y2="178" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#ar3)"/>
+        <line x1="680" y1="148" x2="795" y2="148" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#ar3)"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────── RUN MODES ─────── -->
+<section class="tight">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Run modes</span>
+      <h2>You choose the level of automation.</h2>
+    </div>
+
+    <div class="two">
+      <div class="tile left">
+        <div class="badge">recommended</div>
+        <h3>checkpoints</h3>
+        <p>Mentor pauses at each gate. Waits for your reply. Nothing written until approved.</p>
+      </div>
+      <div class="tile right">
+        <div class="badge">hands-off</div>
+        <h3>automated</h3>
+        <p>Mentor runs end-to-end. Single auditable report. Every gate decision logged. Roll back any write.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────── CONNECTORS ─────── -->
+<section class="tight">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Connectors</span>
+      <h2>Plug into what already runs your life.</h2>
+    </div>
+
+    <div class="conn">
+      <div class="c"><div class="logo" style="color:#e63946">T</div><div class="name">Todoist</div><div class="meta">shipped</div></div>
+      <div class="c"><div class="logo" style="color:#fbbf24">G</div><div class="name">Calendar</div><div class="meta">shipped</div></div>
+      <div class="c"><div class="logo" style="color:#a78bfa">S</div><div class="name">Slack</div><div class="meta">shipped</div></div>
+      <div class="c"><div class="logo" style="color:#e8eef5">N</div><div class="name">Notion</div><div class="meta">byo</div></div>
+      <div class="c"><div class="logo" style="color:#7dd3fc">L</div><div class="name">Linear</div><div class="meta">byo</div></div>
+      <div class="c"><div class="logo" style="color:#34d399">+</div><div class="name">Anything HTTP</div><div class="meta">byo</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────── PULL QUOTE ─────── -->
+<section>
+  <div class="wrap-tight">
+    <h2 class="pull">A real mentor doesn't hand you a form. They <span class="accent">read their notes, have the conversation, and write down what mattered.</span> Trellis does the same.</h2>
+  </div>
+</section>
+
+<!-- ─────── GET STARTED ─────── -->
+<section class="tight">
+  <div class="wrap-tight">
+    <div class="head">
+      <span class="kicker">Get started</span>
+      <h2>Five minutes. One command.</h2>
+    </div>
+
+    <div class="term">
+      <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="ttl mono">~/trellis</span></div>
+<pre><span class="c"># 1. clone</span>
+<span class="k">git clone</span> git@github.com:prateekkarkare/trellis.git <span class="k">&amp;&amp; cd</span> trellis
+
+<span class="c"># 2. bootstrap your private notebook</span>
+./scripts/init.sh
+
+<span class="c"># 3. point your LLM at the notebook, then say:</span>
+<span class="s">"Let's do a session on writing."</span>
+<span class="s">"Weekly review."</span>
+<span class="s">"Refresh the fitness mentor."</span></pre>
+    </div>
+
+    <div class="ctas" style="margin-top:36px">
+      <a class="cta" href="https://github.com/prateekkarkare/trellis">Star on GitHub →</a>
+      <a class="cta ghost" href="../README.md">Read the docs</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <div>Trellis · v0.1 · MIT · markdown all the way down.</div>
+      <div>
+        <a href="https://github.com/prateekkarkare/trellis">GitHub</a>
+        <a href="../README.md">README</a>
+        <a href="../ARCHITECTURE.md">Architecture</a>
+        <a href="../core/FIRST_PRINCIPLES.md">Principles</a>
+        <a href="../core/PROTOCOLS.md">Protocols</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -3,6 +3,8 @@
 > *A trellis holds a plant up. It doesn't tell it where to grow.*
 > A markdown-native framework for running your own team of expert AI mentors across the domains of your life.
 
+**✦ [See the visual overview →](https://prateekkarkare.github.io/trellis/)**
+
 Trellis turns any capable LLM (Claude, ChatGPT, Copilot, local models) into a **disciplined personal mentor team** — one specialist per domain (fitness, finances, a craft, a business, parenting, anything), coordinated by a weekly review, journaling everything to plain markdown that you own forever.
 
 ---
