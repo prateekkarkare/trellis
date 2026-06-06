@@ -1,100 +1,191 @@
-# Quickstart — Your first session in under 10 minutes
+# Setup — from clone to your first session (Claude Cowork)
 
-## 0. Prerequisites
+This is the **complete, no-assumptions** walkthrough. Every step is here. It targets **Claude Cowork** (the only client we support right now). Total time: ~10 minutes, most of it the conversation.
 
-- An LLM client. Any of: Claude Desktop, Claude Code, GitHub Copilot in VS Code, ChatGPT Projects, or anything that can read+write files in a folder.
-- `git` and `bash` (you almost certainly have these).
-- About 10 minutes of attention.
+There are two ways to set up. **Path A (the wizard)** is the normal one. **Path B (manual)** is the same thing by hand, if you ever want it.
 
-## 1. Clone the framework
+---
+
+## What you need first
+
+- **Claude Cowork access** — this is where your mentors live and do their work.
+- **git** — to download the framework. (Check: run `git --version`.)
+- **python3** — powers the click-through wizard. Preinstalled on macOS and most Linux. (Check: `python3 --version`.) If you don't have it, use Path B.
+- A **terminal** — you run exactly one command in it. That's the only terminal step.
+
+---
+
+## Path A — the wizard (recommended)
+
+### Step 1 — Download the framework
+
+In a terminal:
 
 ```bash
 git clone https://github.com/<you>/Trellis.git
 cd Trellis
 ```
 
-## 2. Run init
+You're now inside the `Trellis` folder. This folder is the **framework** (the operating manual). Your personal notebook will be created *next to it*, not inside it.
+
+### Step 2 — Run the one command
 
 ```bash
-./scripts/init.sh
+./scripts/start.sh
 ```
 
-It will ask you a handful of questions:
+A wizard opens in your web browser. (If it doesn't auto-open, the terminal prints a `http://127.0.0.1:…` link — click it.) Leave the terminal open while you use the wizard.
 
-- **Your name** — used in the profile and protocols.
-- **Workspace name** — e.g. "Athena Notebook", "Mentor Team", whatever you'd call it.
-- **Timezone** — IANA name like `America/Los_Angeles` or `Asia/Kolkata`.
-- **Notebook directory** — where your personal content lives. Default: `../my-notebook`. Pick something *outside* the Trellis clone so you can pull framework updates without conflicts.
-- **LLM client** — which client you're driving from. Determines which path-discovery strategy the protocols use.
-- **Initial domains** — comma-separated. Don't try to enumerate everything; pick 3-5 areas you'll actually work on this season.
-- **Season cadence** — defaults to 90-day seasons with weekly reviews on Sunday. Override if you have reason.
+### Step 3 — Click through the wizard
 
-The script generates your notebook tree, writes a personalized `CONFIG.md`, copies the framework's protocol docs into `<notebook>/framework/`, and creates a folder per domain from the template.
+Five quick screens:
 
-## 3. Initialize the notebook as its own git repo
+1. **Notebook name + location** — what to call your mentor team (e.g. "My Mentor Team"), and **where to create it** on your computer. The wizard pre-fills a sensible folder and shows a live *"Creates: …/your-notebook"* preview; change it if you want it somewhere else. Optionally your first name.
+2. **Mentors** — type or tap the pursuits you want a mentor for (fitness, finances, a craft…). Add as many as you like; you can hire more later.
+3. **Rhythm** — your *starting* settings: how much time you can give per day, which day you want your weekly review, and how long a season is. **These are not final** — your mentor confirms and adjusts them in the conversation. This is where time budget / review day / season length get set.
+4. **Signals (optional)** — connect an input your mentors learn from (Todoist, calendar…). You can skip and wire these later.
+5. **Create my team** — press it.
+
+### Step 4 — What just happened (the wizard did this for you)
+
+Behind the scenes the wizard created your **notebook folder** at the location you chose (default: right next to the `Trellis` folder, with a folder name derived from your notebook name) containing:
+
+```
+my-notebook/
+├── CLAUDE.md                 # ★ THE ENTRY POINT — Claude reads this automatically.
+│                            #   It says "you are the mentor team, run INTAKE" and
+│                            #   carries your wizard choices (the "Setup brief").
+├── CONFIG.md                 # your settings (name, rhythm, client)
+├── profile.md               # empty — your mentor fills this in the conversation
+├── framework/               # the operating manual the mentor reads (PROTOCOLS.md, …)
+├── mentors/
+│   ├── season_current.md
+│   ├── <each mentor you picked>/   # one folder per mentor, marked "needs intake"
+│   └── …
+└── .trellis/                # machine state only (not read by the mentor)
+```
+
+**Why `CLAUDE.md` matters:** when you connect a folder, Claude doesn't read every file — it auto-loads a root `CLAUDE.md` as its instructions. That's how it knows it's your mentor team instead of a generic assistant. Your wizard choices are written *into* `CLAUDE.md` (a visible file), not hidden away — so there's nothing for Claude to “discover.”
+
+You did **not** set any goals yet. That's intentional — goals come from the conversation, not a form.
+
+### Step 5 — Connect the notebook folder to Claude Cowork
+
+This is the one manual handoff. In Claude Cowork, **give Cowork access to your `my-notebook` folder** (the path is shown on the wizard's final screen) so Claude can read and write the files in it.
+
+> *(Exact Cowork UI: attach/mount the folder to your Cowork project the same way you connect any working folder. If you already run a Trellis-style notebook in Cowork, connect this one the same way.)*
+
+### Step 6 — Meet your mentors (the conversation)
+
+In Cowork, type:
+
+> **start my intake**
+
+No copy-paste needed: when you connected the folder, Claude already loaded `CLAUDE.md`, which tells it to run **`PROTOCOL: INTAKE`** and carries your wizard choices. It runs:
+
+- **Part A — gets to know you** (once): who you are, your real weekly time, and confirms the rhythm you set in the wizard. Writes `profile.md`.
+- **Part B — one mentor at a time**: for each mentor you hired, that domain's expert runs its *own* first session — your goals there, your honest starting point, the domain-specific questions a real coach would ask, and it ends by doing **one real piece of work** with you, then asks you to confirm it got things right.
+
+You talk; Claude writes every file. This is the conversation — it lives in Cowork, not the wizard.
+
+> **If Claude makes a generic to-do list / dashboard instead** (its default “start” behavior), it didn't load `CLAUDE.md` — the folder probably isn't connected, or you're in a project that isn't pointed at it. Make sure the notebook folder is connected, then paste the wizard's **“Copy the kickoff message”** as a fallback — it explicitly tells Claude to read `CLAUDE.md` and run INTAKE.
+
+### Step 7 — Confirm it worked
+
+After intake, your notebook should have real content. In a terminal:
 
 ```bash
-cd ../my-notebook    # or whichever path you chose
-git init
-git add -A
-git commit -m "initial bootstrap from Trellis"
-# Push to a PRIVATE remote — this folder will contain personal content.
+cd ../my-notebook
+cat profile.md                 # should describe you (no <placeholders>)
+ls mentors/*/sessions/         # should list your first session file(s)
 ```
 
-## 4. Point your LLM client at the notebook
+Or, from the `Trellis` folder, run the structural check:
 
-Pick the guide for your client:
+```bash
+./scripts/validate.sh --notebook ../my-notebook
+```
 
-- [Claude Desktop](client-setup/claude-desktop.md)
-- [Claude Code](client-setup/claude-code.md)
-- [GitHub Copilot (VS Code)](client-setup/github-copilot.md)
-- [ChatGPT Projects](client-setup/chatgpt.md)
-
-All four boil down to: the model needs to be able to read `framework/PROTOCOLS.md`, `framework/FIRST_PRINCIPLES.md`, and the contents of `mentors/`, and write back to `mentors/`.
-
-## 5. Run your first session
-
-In the LLM client, say something like:
-
-> *"Let's do a session on writing."*  (replace `writing` with one of your initial domains)
-
-The mentor should:
-
-1. Discover the path to your notebook (per the strategy in `framework/PROTOCOLS.md` → "PATH DISCOVERY").
-2. Read `mentors/writing/done_topics.md` first (P1 — never reassign work).
-3. Read `current_focus.md`, `curriculum.md`, `log.md`, `intel.md`.
-4. Read `profile.md` to know who you are.
-5. Have the actual conversation.
-6. At session end, write `mentors/writing/sessions/<date>.md`, append to `log.md`, append to `done_topics.md`, update `current_focus.md`.
-
-If the model skipped any of those steps, paste this into the chat and try again:
-
-> *"You're operating under the protocols in `framework/PROTOCOLS.md`. Run DOMAIN_SESSION. Use the path-discovery method in that file. Read done_topics.md before proposing anything."*
-
-## 6. Run your first weekly review
-
-After you've had a few sessions across a few domains, say:
-
-> *"Weekly review."*
-
-The coordinator will:
-
-1. Gather signals (from your task tracker if you wired up a connector, from `mentors/*/log.md` and `mentors/*/sessions/` otherwise).
-2. Pause and ask you to confirm the signal brief is accurate. **This is the first checkpoint.** Don't skip it; this is where the mentor finds out what really happened.
-3. Spawn one mentor agent per Active/Seeding domain, in parallel, with the signal brief.
-4. Synthesize their reports into one cross-domain plan.
-5. Pause and present that plan for your approval. **Second checkpoint.**
-6. Write outputs: update `current_focus.md` per domain, update `coordinator_state.md`, append to `cross_domain.md` if anything new emerged.
-
-## 7. Iterate
-
-The system gets dramatically better around week 3-4 because by then `profile.md` has real observations, `done_topics.md` has real entries, and the mentors have real calibration data. Don't judge it on the first session — judge it on the first month.
+That's the whole setup. You now have a populated notebook and a first real win in your top domain.
 
 ---
 
-## What if something goes wrong?
+## Path B — manual (no wizard)
 
-- **The mentor isn't reading the right files.** Check `framework/PROTOCOLS.md` is in context and that the path-discovery section matches your client. See [docs/customization.md](customization.md) for the path discovery rules.
-- **The mentor is too agreeable.** Bump `COMM_TONE` in `CONFIG.md` to 4 or 5. Also remind it: *"Run the critical-thinking pass from PROTOCOLS.md step 7 before giving me recommendations."*
-- **The system feels heavy.** It is, the first time. Once `current_focus.md` and `done_topics.md` are populated, mentors read much less. Most steady-state sessions cost ~1500 tokens of context, not 15000.
-- **Anything else.** Open an issue. The framework is the README of its own behavior; if the README is wrong, that's a bug.
+Same result, by hand. Use this if you don't have `python3` or prefer the CLI.
+
+```bash
+git clone https://github.com/<you>/Trellis.git
+cd Trellis
+
+# Scaffold the notebook + your mentors in one non-interactive command.
+# (No prompts. The rhythm flags are starting values your mentor confirms later.)
+./scripts/init.sh \
+  --name "Asha" \
+  --domains "fitness,finances,music" \
+  --review-day Sunday \
+  --season-length 90 \
+  --time-ceiling 180
+```
+
+Then:
+
+1. Connect `../my-notebook` to Claude Cowork (Step 5 above).
+2. In Cowork, say **"start my intake"** (Step 6 above).
+
+To add a mentor later from the CLI: `./scripts/add-domain.sh <name> --notebook ../my-notebook`. (Or just say *"hire a `<name>` mentor"* in Cowork — easier.)
+
+---
+
+## After setup — the everyday commands
+
+You run these by **talking to Claude in Cowork** (never by editing files yourself):
+
+| You say… | What happens |
+|---|---|
+| `let's do a session on <domain>` | A normal coaching session in that domain. |
+| `hire a <domain> mentor` | Adds a new mentor and runs its first conversation (INTAKE Part B). |
+| `weekly review` | The coordinator reviews your week across all mentors and plans the next one. |
+| `season review` | End-of-season retrospective + designs the next season. |
+
+---
+
+## Where your settings live (and how to change them)
+
+Everything is in **`CONFIG.md`** at the top of your notebook — plain text, edit any time, or just tell your mentor *"change my weekly review to Saturday"* and it edits the file.
+
+| Setting | Where it's set | Default |
+|---|---|---|
+| Weekly review day | Wizard "Rhythm" → confirmed at intake → `CONFIG.md` | Sunday |
+| Weekly time budget (per-day ceiling, per-week floor) | Wizard "Rhythm" → confirmed at intake → `CONFIG.md` | 180 / 90 min |
+| Season length | Wizard "Rhythm" → confirmed at intake → `CONFIG.md` + `season_current.md` | 90 days |
+| Mentor refresh cadence | `CONFIG.md` (internal default; rarely changed) | every 4 weeks |
+| Tone / format | Conversation (mentor learns your preference) → `CONFIG.md` | 3 / mixed |
+
+The rule: **the wizard sets a starting value, the mentor confirms it with you, and `CONFIG.md` is the source of truth thereafter.**
+
+---
+
+## Make the notebook your own git repo (recommended)
+
+Your notebook is personal data. Keep it in your own private repo:
+
+```bash
+cd ../my-notebook
+git init
+git add -A
+git commit -m "initial setup from Trellis"
+# then push to a PRIVATE remote of your own.
+```
+
+You can keep pulling framework updates into the `Trellis` clone without touching your notebook.
+
+---
+
+## Troubleshooting
+
+- **The wizard didn't open a browser.** Look in the terminal for a `http://127.0.0.1:…` link and open it yourself.
+- **"start my intake" did nothing.** Make sure the `my-notebook` folder is connected to Cowork (Step 5). Then paste the wizard's **kickoff message** and send.
+- **Claude talked but didn't write files.** Say: *"You're running the protocols in `framework/PROTOCOLS.md`. Journal this — write the files."* Writing the files is the whole contract.
+- **I want to start over.** Delete the `my-notebook` folder and re-run `./scripts/start.sh` (or `./scripts/init.sh --force`).
+- **No python3.** Use **Path B**. The wizard's final screen also prints the exact `init.sh` command for your choices.

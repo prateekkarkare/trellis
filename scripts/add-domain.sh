@@ -67,12 +67,14 @@ done
 touch "$DOMDIR/sessions/.gitkeep" "$DOMDIR/archive/.gitkeep"
 
 cat <<MSG
-✓ created mentors/$DOMAIN/
+✓ created mentors/$DOMAIN/ (needs intake)
 
-Next:
-  1. Open $NOTEBOOK/mentors/season_current.md
-     Add a row for "$DOMAIN" with state (Active / Seeding / Silent) and exit criterion.
-  2. In your LLM client, say:
-       "Let's do a session on $DOMAIN"
-     The first session will populate curriculum.md and current_focus.md.
+Next — in your LLM client, say:
+    "Hire the $DOMAIN mentor"
+That runs the mentor's first conversation (INTAKE Part B): it learns your goals,
+baseline, and constraints for $DOMAIN, adds the season_current.md row, populates
+curriculum.md / current_focus.md, and ends with one real piece of work.
+
+(You don't normally need this script — during intake, just say "hire a <domain>
+mentor" and the mentor creates the folder for you.)
 MSG

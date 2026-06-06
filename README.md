@@ -28,17 +28,18 @@ Trellis fixes all four with a single idea: **the mentor keeps the notebook, not 
 Trellis/
 ├── core/                   # The protocol layer — operating manual for the mentor team
 │   ├── FIRST_PRINCIPLES.md     # The constitution. 9 principles. Read first.
-│   ├── PROTOCOLS.md            # DOMAIN_SESSION, WEEKLY_REVIEW, MENTOR_REFRESH, etc.
+│   ├── PROTOCOLS.md            # INTAKE, DOMAIN_SESSION, WEEKLY_REVIEW, etc.
 │   ├── WIKI_BRIDGE.md          # How mentors interact with an external knowledge base
 │   └── *.template              # Parameterized starter docs (profile, season, coordinator)
+├── onboarding/              # The visual setup wizard (single-file HTML)
 ├── templates/domain/       # Scaffold for a new domain mentor — copied per domain
 ├── examples/example_domain/    # One fully-populated worked example to learn from
 ├── connectors/             # Adapter stubs: Todoist, Calendar, Slack (you wire them up)
-├── scripts/                # init.sh (first-run), add-domain.sh, validate.sh
+├── scripts/                # start.sh (the one command), init.sh (scaffold), add-domain.sh, validate.sh
 └── docs/                   # Quickstart, concept guide, client-specific setup notes
 ```
 
-After running `./scripts/init.sh`, your **personal notebook** is created alongside the framework. You commit it to your own private repo. You can keep pulling framework updates upstream without your personal content leaking.
+Run `./scripts/start.sh` and a visual wizard walks you through setup; your **personal notebook** is created alongside the framework. You commit it to your own private repo, and keep pulling framework updates upstream without your personal content leaking.
 
 ---
 
@@ -49,31 +50,29 @@ After running `./scripts/init.sh`, your **personal notebook** is created alongsi
 git clone https://github.com/<you>/Trellis.git
 cd Trellis
 
-# 2. Run the interactive bootstrap
-./scripts/init.sh
-#  → asks: your name, notebook directory, initial domains, season cadence
-#  → generates: ../my-notebook/{mentors,profile.md,season_current.md,...}
-
-# 3. Point your LLM client at the notebook
-#    See docs/client-setup/ for Claude Desktop, Claude Code, Copilot, ChatGPT
-
-# 4. Start your first session
-#    Say to the mentor: "let's do a session on <domain>"
-#    The mentor reads context, runs DOMAIN_SESSION, journals the result.
-
-# 5. End the week
-#    Say: "weekly review"
-#    The coordinator gathers signals, consults each mentor in parallel,
-#    presents a synthesis, asks for your approval, writes outputs.
+# 2. Run the wizard — the one command. A visual onboarding opens in your browser.
+./scripts/start.sh
+#  → name your notebook → pick your mentors → set your rhythm → (optional) signals
+#  → press "Create my team": it scaffolds your notebook + a folder per mentor
 ```
 
-Full walkthrough: [docs/quickstart.md](docs/quickstart.md)
+Then, in **Claude Cowork**:
+
+```text
+3. Connect your new  ../my-notebook  folder to Cowork (one time).
+4. Say:  start my intake
+     → Each mentor runs its own first conversation: gets to know you, sets that
+       domain's goals with you, and does one real piece of work. Makes it yours.
+5. Day to day:  "let's do a session on <domain>"  ·  "weekly review"  ·  "hire a <domain> mentor"
+```
+
+Every step, no assumptions: **[docs/quickstart.md](docs/quickstart.md)**. (Prefer the CLI to the wizard? `./scripts/init.sh` scaffolds the notebook non-interactively.)
 
 ---
 
 ## How it works (one paragraph)
 
-Each domain (fitness, music, a side project, parenting) gets a folder of plain markdown files: a curriculum, a catalog of done topics, a focus sheet, a session journal, an optional intel page. The LLM acting as that domain's mentor reads these before every session — most importantly the **done topics** so it never reassigns finished work. The mentor coaches the conversation, then writes a session page, updates the catalog, edits the focus sheet, and trims the log. A **coordinator** runs a weekly review across all domains: pulls signals from your task tracker if connected, spawns one mentor agent per active domain in parallel, synthesizes their reports, pauses for your input twice (signal check, plan check), then writes the next week's plan. A **season** is a 90-day arc with explicit exit criteria — at season end, archives roll up, and you design the next one.
+You onboard through a **visual wizard** (`./scripts/start.sh`) — name your notebook, pick your mentors, set your rhythm; it scaffolds your notebook and a folder per mentor. You connect that folder to **Claude Cowork** and say *"start my intake."* Then comes the one-time **intake**: each mentor runs its own first conversation — gets to know you, asks the questions an expert in *that* domain would, co-designs the goals, and does a first piece of real work — so day one delivers value instead of a folder of empty templates. After that, each domain (fitness, music, a side project, parenting) gets a folder of plain markdown files: a curriculum, a catalog of done topics, a focus sheet, a session journal, an optional intel page. The LLM acting as that domain's mentor reads these before every session — most importantly the **done topics** so it never reassigns finished work. The mentor coaches the conversation, then writes a session page, updates the catalog, edits the focus sheet, and trims the log. A **coordinator** runs a weekly review across all domains: pulls signals from your task tracker if connected, spawns one mentor agent per active domain in parallel, synthesizes their reports, pauses for your input twice (signal check, plan check), then writes the next week's plan. A **season** is a 90-day arc with explicit exit criteria — at season end, archives roll up, and you design the next one.
 
 The full architecture: [core/FIRST_PRINCIPLES.md](core/FIRST_PRINCIPLES.md). The full operating manual: [core/PROTOCOLS.md](core/PROTOCOLS.md).
 
@@ -91,16 +90,11 @@ Full statement: [core/FIRST_PRINCIPLES.md](core/FIRST_PRINCIPLES.md)
 
 ---
 
-## Client-agnostic by design
+## Runs on Claude Cowork
 
-The framework is just markdown. Any LLM client that can read files and write back can run it. Setup notes for common clients:
+Right now Trellis is set up and supported on **Claude Cowork** — that's the one path we document end to end, so it's reliable. Full step-by-step: **[docs/quickstart.md](docs/quickstart.md)**.
 
-- [docs/client-setup/claude-desktop.md](docs/client-setup/claude-desktop.md) — Projects + system prompt
-- [docs/client-setup/claude-code.md](docs/client-setup/claude-code.md) — CLI with `AGENTS.md` / `.claude/`
-- [docs/client-setup/github-copilot.md](docs/client-setup/github-copilot.md) — `.github/copilot-instructions.md`
-- [docs/client-setup/chatgpt.md](docs/client-setup/chatgpt.md) — Projects + custom instructions
-
-The protocols don't care which model runs them. They specify behavior, not implementation.
+Under the hood the framework is just markdown and plain protocols — nothing is Claude-specific by design, so other file-reading assistants can run it too. Notes for other clients live in [docs/client-setup/](docs/client-setup/) but aren't first-class yet. We're keeping the supported surface small on purpose until the Cowork flow is rock-solid.
 
 ---
 

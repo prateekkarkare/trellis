@@ -54,7 +54,7 @@ echo "Validating notebook at: $NOTEBOOK"
 echo "---"
 
 # Top-level
-for f in CONFIG.md profile.md README.md; do check_file "$f"; warn_if_unsub "$f"; done
+for f in CLAUDE.md CONFIG.md profile.md README.md; do check_file "$f"; warn_if_unsub "$f"; done
 
 # Mentors
 for f in mentors/season_current.md mentors/coordinator_state.md mentors/cross_domain.md; do

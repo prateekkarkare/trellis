@@ -3,17 +3,23 @@
 *Permanent doc. Read by every mentor at session start. Updated by mentors when they observe new patterns (Coordinator at weekly review, Domain Mentors after sessions when they spot something specific to the user).*
 *Owned by: this file. Referenced by: every PROTOCOL.*
 
-> **Bootstrap note**: This file is mostly empty on day one. That is correct. Mentors fill it in as they learn about you. Don't fill it in yourself with answers to questionnaires — that's exactly the LMS anti-pattern (FIRST_PRINCIPLES P7). Let the system observe you.
+> **Bootstrap note**: This file starts mostly empty — that's correct. Don't fill it in yourself with questionnaire answers; that's the LMS anti-pattern (FIRST_PRINCIPLES P7). It fills in two ways:
+> 1. **At INTAKE (your first session)** the mentor interviews you and writes down the *facts you already know* — Identity, Time Reality, External Teachers, and a *starting* read on communication/accountability.
+> 2. **Over the following weeks**, mentors fill in the *patterns you can't reliably self-report* — energy curves, what motivates/demotivates you, behavioral patterns, learning style, the calibration log — from observed behavior at each weekly review.
+>
+> The rule is **ask-now facts vs observe-later patterns**. Sections marked *observed* below are left for the mentors; sections marked *intake* are seeded at your first session. See `PROTOCOL: INTAKE` in `PROTOCOLS.md`.
 
 ---
 
 ## Identity
+*Intake seeds this — the mentor asks at your first session.*
 
 - Name: {{USER_NAME}}
 - Location / time zone: <your TZ — used for sane scheduling>
 - Current chapter of life (1-2 sentences): <what season are you in?>
 
 ## Time Reality
+*Intake seeds this — ask for the honest week, not the aspirational one.*
 
 - Typical workday window: <e.g. 9am–7pm>
 - Mentor-session windows that actually work: <when can you do a real session?>
@@ -29,7 +35,7 @@
 
 ## Accountability Style
 
-*Filled in by mentors. Some users want hard pushback; some want gentle nudges; most want it situational. The mentors learn which is which from your actual reactions over weeks.*
+*Intake sets a **starting** value from what you say you want; mentors then recalibrate from your actual reactions over weeks — most people guess this wrong about themselves. Some users want hard pushback; some want gentle nudges; most want it situational.*
 
 ## Energy Patterns
 
@@ -44,6 +50,7 @@
 *Filled in by mentors. Observed, not declared.*
 
 ## Communication Preferences
+*Intake sets starting values (also written to CONFIG.md); recalibrated as the mentor learns how you actually respond.*
 
 - Tone: <how blunt do you want feedback? On a 1–5 from "gentle" to "ruthless">
 - Format: <brief bullets / long prose / tables / mixed>
@@ -51,7 +58,7 @@
 
 ## External Teachers & Courses
 
-*Optional. Living table of paid courses, books-in-progress, coaches, etc. Mentors should know what other inputs are landing on you so they don't duplicate or contradict.*
+*Intake seeds this, then it stays a living table of paid courses, books-in-progress, coaches, etc. Mentors should know what other inputs are landing on you so they don't duplicate or contradict.*
 
 | Domain | Source | Status | Notes |
 |---|---|---|---|

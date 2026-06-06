@@ -3,6 +3,8 @@
 *The currently-active season. Updated at the SEASON_TRANSITION protocol. Replaced wholesale at season end.*
 *Owned by: this file. Referenced by: every PROTOCOL when scheduling work.*
 
+> **Bootstrap note**: The dates above are a starting window from the setup wizard (season length × today). At INTAKE (your first conversation) the mentor confirms or changes them with you, along with domain states, "why this season", exit criteria, and locked slots. You don't fill the `<angle-bracket>` placeholders by hand; talk it through with the mentor instead (FIRST_PRINCIPLES P2).
+
 A **season** is a fixed-duration arc (typically 90 days) with explicit exit criteria per active domain. It bounds ambition, forces choices about what's Active vs Silent right now, and creates a natural archive boundary. Without seasons the system sprawls.
 
 ---
@@ -37,6 +39,8 @@ This is the high-level routing layer that `core/PROTOCOLS.md` builds on. Default
 
 | User says | What runs |
 |---|---|
+| "let's do my intake" / "set me up" | INTAKE — first-run setup (Part A once, then Part B per mentor) |
+| "hire a <domain> mentor" / "add <domain>" | INTAKE — Part B for a newly hired mentor |
 | "weekly review" | WEEKLY_REVIEW protocol |
 | "let's do a session on <domain>" | DOMAIN_SESSION for that domain |
 | "refresh the mentors" | MENTOR_REFRESH protocol (pulls fresh intel into `intel.md`) |
@@ -62,7 +66,7 @@ This is the high-level routing layer that `core/PROTOCOLS.md` builds on. Default
 
 ---
 
-## Season {{SEASON_NUM}} Exit Criteria ({{SEASON_END}})
+## Season Exit Criteria ({{SEASON_END}})
 
 *Per-domain: an observable, time-bounded outcome. At SEASON_TRANSITION the coordinator marks each Met ✅ / Partially Met ⚠️ / Not Met ❌ with one-line reasoning.*
 

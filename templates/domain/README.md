@@ -12,6 +12,19 @@ cp -r mentors/_template mentors/painting
 # Have the painting mentor populate current_focus.md and curriculum.md in conversation.
 ```
 
+## First conversation (mentor intake)
+
+A freshly created domain starts in **needs-intake** state: `current_focus.md` has no real phase yet. Before the first working session, the mentor runs **INTAKE Part B** (see `PROTOCOLS.md`) — its own first session with the user: why this domain, an honest baseline (which seeds `done_topics.md` so finished work is never reassigned), how they want to be coached *here*, the domain-specific constraints, a mirror, one real win, and a sign-off.
+
+The questions are **yours to choose as the domain expert.** Seed a few below that a real mentor in this field would always ask a new student; the mentor generates the rest live. Replace these examples with ones that fit `<domain>`:
+
+- <e.g. "What have you already tried here, and what made it stick or fall apart?">
+- <e.g. a domain-specific constraint question — injuries (fitness), instrument owned (music), risk tolerance (finances)>
+- <e.g. "What does a real win here look like 90 days out?">
+- <e.g. "How do you best learn this — by doing, theory-first, or by example?">
+
+Once Part B is done, `current_focus.md` leaves needs-intake state and normal `DOMAIN_SESSION`s begin.
+
 ## Files in this template (all plain markdown)
 
 | File | Purpose | Writer |

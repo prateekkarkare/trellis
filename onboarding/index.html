@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Trellis — Set up your mentor team</title>
+<style>
+  :root{
+    --bg:#07090d; --panel:#0d1117; --panel2:#11161f; --line:#1e2733;
+    --ink:#e6edf3; --dim:#8b97a7; --faint:#5b6675;
+    --sky:#7dd3fc; --violet:#a78bfa; --emerald:#34d399; --amber:#fbbf24; --rose:#fb7185;
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:
+      radial-gradient(1100px 700px at 78% -8%, rgba(167,139,250,.14), transparent 60%),
+      radial-gradient(900px 620px at 8% 108%, rgba(52,211,153,.12), transparent 58%),
+      var(--bg);
+    color:var(--ink);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .frame{
+    width:100%; max-width:440px; min-height:660px;
+    background:linear-gradient(180deg,var(--panel),#0a0e14);
+    border:1px solid var(--line); border-radius:28px;
+    box-shadow:0 40px 120px -30px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.03);
+    display:flex; flex-direction:column; overflow:hidden; position:relative;
+  }
+  .bar{height:3px;background:var(--line);position:relative;flex:none}
+  .bar > i{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,var(--sky),var(--violet));
+    transition:right .45s cubic-bezier(.4,0,.2,1)}
+  .stage{flex:1;display:flex;flex-direction:column;padding:30px 28px 24px;position:relative}
+  .screen{display:none;flex:1;flex-direction:column;animation:fade .4s ease both}
+  .screen.on{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:14px}
+  h1{font-size:27px;line-height:1.16;letter-spacing:-.02em;margin:0 0 12px;font-weight:800}
+  h1 .g{background:linear-gradient(90deg,var(--sky),var(--violet) 60%,var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent}
+  h2{font-size:22px;letter-spacing:-.02em;margin:0 0 8px;font-weight:800}
+  p.sub{color:var(--dim);margin:0 0 22px;font-size:14.5px}
+  .cards{display:flex;flex-direction:column;gap:10px;margin:8px 0 6px}
+  .card{display:flex;gap:13px;align-items:flex-start;padding:13px 14px;border:1px solid var(--line);
+    border-radius:14px;background:var(--panel2)}
+  .card .ic{width:34px;height:34px;flex:none;border-radius:10px;display:grid;place-items:center}
+  .card .ic svg{width:18px;height:18px}
+  .card h3{margin:1px 0 2px;font-size:14px;font-weight:700}
+  .card p{margin:0;font-size:12.5px;color:var(--dim);line-height:1.45}
+  label.field{display:block;margin:0 0 18px}
+  label.field .lab{font-size:12.5px;color:var(--dim);margin-bottom:7px;font-weight:600}
+  input[type=text]{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);
+    background:#0a0e15;color:var(--ink);font-size:15px;outline:none;transition:border-color .15s,box-shadow .15s}
+  input[type=text]:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(167,139,250,.18)}
+  .pathprev{font-size:12px;color:var(--faint);margin-top:8px;line-height:1.5}
+  .pathprev code{color:var(--sky);font-family:ui-monospace,Menlo,monospace;word-break:break-all}
+  .addrow{display:flex;gap:8px;margin-bottom:14px}
+  .addrow input{flex:1}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+  .chip{border:1px solid var(--line);background:var(--panel2);color:var(--dim);
+    padding:8px 12px;border-radius:999px;font-size:12.5px;cursor:pointer;display:flex;gap:7px;align-items:center;
+    transition:all .15s;user-select:none}
+  .chip:hover{border-color:var(--violet);color:var(--ink)}
+  .chip .dot{width:7px;height:7px;border-radius:50%}
+  .picked{display:flex;flex-direction:column;gap:8px;margin-top:4px;overflow-y:auto}
+  .mentor{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:13px;
+    border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),#0b0f16);animation:fade .25s ease both}
+  .mentor .av{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;font-weight:800;font-size:13px;color:#06120d}
+  .mentor .nm{flex:1;font-size:14px;font-weight:600;text-transform:capitalize}
+  .mentor .x{color:var(--faint);cursor:pointer;font-size:18px;line-height:1;padding:4px;border-radius:6px}
+  .mentor .x:hover{color:var(--rose);background:rgba(251,113,133,.1)}
+  .empty{color:var(--faint);font-size:13px;text-align:center;padding:18px 0;border:1px dashed var(--line);border-radius:12px}
+  /* rhythm */
+  .rgroup{margin-bottom:18px}
+  .rlabel{font-size:12.5px;color:var(--dim);margin-bottom:9px;font-weight:600}
+  .rchips{display:flex;gap:8px;flex-wrap:wrap}
+  .rchip{flex:1 1 calc(50% - 4px);border:1px solid var(--line);background:var(--panel2);
+    border-radius:12px;padding:10px 12px;cursor:pointer;transition:all .15s;text-align:left}
+  .rchip:hover{border-color:var(--sky)}
+  .rchip.on{border-color:var(--emerald);background:rgba(52,211,153,.08)}
+  .rchip b{display:block;font-size:13.5px;font-weight:700}
+  .rchip small{color:var(--dim);font-size:11.5px}
+  .rchip.day{flex:1 1 calc(25% - 6px);text-align:center;padding:10px 6px}
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{display:flex;gap:12px;align-items:center;padding:13px 14px;border-radius:13px;border:1px solid var(--line);
+    background:var(--panel2);cursor:pointer;transition:all .15s}
+  .opt:hover{border-color:var(--sky)}
+  .opt.sel{border-color:var(--emerald);background:rgba(52,211,153,.08)}
+  .opt .tick{margin-left:auto;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);flex:none;display:grid;place-items:center}
+  .opt.sel .tick{border-color:var(--emerald);background:var(--emerald)}
+  .opt.sel .tick svg{display:block}
+  .opt .tick svg{display:none;width:12px;height:12px}
+  .opt .oi{width:30px;height:30px;border-radius:9px;flex:none;display:grid;place-items:center;background:rgba(125,211,252,.1)}
+  .opt .oi svg{width:17px;height:17px}
+  .opt b{font-size:14px;font-weight:700;display:block}
+  .opt small{color:var(--dim);font-size:12px}
+  .promptbox{background:#05080c;border:1px solid var(--line);border-radius:13px;padding:14px;
+    font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#c8d3e0;white-space:pre-wrap;
+    max-height:200px;overflow:auto;margin-bottom:12px}
+  .done-ic{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;margin:6px 0 16px;
+    background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3)}
+  .done-ic svg{width:30px;height:30px}
+  .steps{list-style:none;counter-reset:s;padding:0;margin:0 0 16px}
+  .steps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+  .steps li:last-child{border-bottom:0}
+  .steps li::before{content:counter(s);flex:none;width:24px;height:24px;border-radius:50%;background:rgba(125,211,252,.14);
+    color:var(--sky);font-weight:800;font-size:12.5px;display:grid;place-items:center;margin-top:1px}
+  .steps li b{color:var(--ink)}
+  .steps li small{color:var(--dim);display:block;font-size:12px;margin-top:2px}
+  .pill{display:inline-flex;gap:7px;align-items:center;background:var(--panel2);border:1px solid var(--line);
+    border-radius:999px;padding:6px 12px;font-size:12px;color:var(--dim);margin:2px 4px 2px 0}
+  code.path{font-family:ui-monospace,Menlo,monospace;color:var(--sky);font-size:12.5px;word-break:break-all}
+  .nav{display:flex;gap:10px;align-items:center;padding-top:18px;margin-top:auto}
+  button{font:inherit;cursor:pointer;border:0;border-radius:12px;transition:transform .08s,filter .15s,opacity .15s}
+  button:active{transform:translateY(1px)}
+  .btn{padding:13px 18px;font-weight:700;font-size:14.5px;background:linear-gradient(90deg,var(--sky),var(--violet));
+    color:#070a10;flex:1}
+  .btn:hover{filter:brightness(1.07)}
+  .btn[disabled]{opacity:.4;cursor:not-allowed;filter:none}
+  .btn.alt{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+  .btn.alt:hover{border-color:var(--violet)}
+  .ghost{background:none;color:var(--dim);padding:13px 14px;font-weight:600;flex:none}
+  .ghost:hover{color:var(--ink)}
+  .copybtn{background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.3);
+    padding:11px 14px;font-weight:700;font-size:13px;width:100%}
+  .copybtn:hover{filter:brightness(1.1)}
+  .smallnote{font-size:11.5px;color:var(--faint);text-align:center;margin-top:12px;line-height:1.5}
+  .brand{position:absolute;top:18px;right:22px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--faint);font-weight:700;z-index:2}
+  a{color:var(--sky)}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="brand">Trellis</div>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="stage">
+
+    <!-- 0: SPLASH -->
+    <section class="screen on" data-screen="0">
+      <div class="eyebrow">Your personal board of mentors</div>
+      <h1>One mentor for every part of you <span class="g">worth growing.</span></h1>
+      <p class="sub">A team of expert AI mentors — coordinated, honest, and yours forever in plain text. Let's set up your team. Takes about 2 minutes.</p>
+      <div class="cards">
+        <div class="card"><div class="ic" style="background:rgba(52,211,153,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M12 3v18M5 8l7-5 7 5"/><circle cx="12" cy="14" r="3"/></svg></div>
+          <div><h3>A mentor per pursuit</h3><p>Fitness, finances, a craft, a business — whatever you're chasing.</p></div></div>
+        <div class="card"><div class="ic" style="background:rgba(125,211,252,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#7dd3fc" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 5v4h4"/></svg></div>
+          <div><h3>They learn you over time</h3><p>Each weekly review re-reads your signals and recalibrates.</p></div></div>
+        <div class="card"><div class="ic" style="background:rgba(251,191,36,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><path d="M4 18 10 12 14 16 20 8"/><path d="M20 12V8h-4"/></svg></div>
+          <div><h3>A roadmap that adapts</h3><p>Tasks land in your task app; progress flows back as signal.</p></div></div>
+      </div>
+      <div class="nav"><button class="btn" onclick="go(1)">Get started</button></div>
+      <div class="smallnote">No account. No cloud. Your notebook is markdown in a folder you own.</div>
+    </section>
+
+    <!-- 1: NAME -->
+    <section class="screen" data-screen="1">
+      <div class="eyebrow">Step 1 · Your notebook</div>
+      <h2>What should we call your notebook?</h2>
+      <p class="sub">This is the home for your whole mentor team. You can rename it later.</p>
+      <label class="field"><div class="lab">Notebook name</div>
+        <input type="text" id="in_workspace" placeholder="My Mentor Team" autocomplete="off" oninput="refreshPath()"/></label>
+      <label class="field"><div class="lab">Where to create it <span style="color:var(--faint)">(a folder on your computer)</span></div>
+        <input type="text" id="in_location" placeholder="~" autocomplete="off" spellcheck="false" oninput="refreshPath()"/>
+        <div class="pathprev">Creates: <code id="path_preview">~/my-notebook</code></div></label>
+      <label class="field"><div class="lab">Your first name <span style="color:var(--faint)">(optional — your mentor will confirm it)</span></div>
+        <input type="text" id="in_name" placeholder="e.g. Asha" autocomplete="off"/></label>
+      <div class="nav"><button class="ghost" onclick="go(0)">Back</button><button class="btn" onclick="go(2)">Next</button></div>
+    </section>
+
+    <!-- 2: MENTORS -->
+    <section class="screen" data-screen="2">
+      <div class="eyebrow">Step 2 · Your mentors</div>
+      <h2>What do you want to get better at?</h2>
+      <p class="sub">Add as many as you like — you can hire more anytime. Pick a few to start.</p>
+      <div class="addrow">
+        <input type="text" id="in_mentor" placeholder="Type a pursuit…" autocomplete="off"
+               onkeydown="if(event.key==='Enter'){addMentorFromInput();event.preventDefault();}"/>
+        <button class="btn alt" style="flex:none;padding:13px 16px" onclick="addMentorFromInput()">Add</button>
+      </div>
+      <div class="chips" id="suggestions"></div>
+      <div class="picked" id="picked"></div>
+      <div class="nav"><button class="ghost" onclick="go(1)">Back</button>
+        <button class="btn" id="mentorNext" onclick="go(3)">Next</button></div>
+    </section>
+
+    <!-- 3: RHYTHM -->
+    <section class="screen" data-screen="3">
+      <div class="eyebrow">Step 3 · Your rhythm</div>
+      <h2>How much, and how often?</h2>
+      <p class="sub">Just a starting point — your mentor confirms and fine-tunes all of this in your first conversation.</p>
+
+      <div class="rgroup">
+        <div class="rlabel">Focused time you can give, on a typical day</div>
+        <div class="rchips" id="timeChips"></div>
+      </div>
+      <div class="rgroup">
+        <div class="rlabel">When do you want your weekly review?</div>
+        <div class="rchips" id="dayChips"></div>
+      </div>
+      <div class="rgroup">
+        <div class="rlabel">How far ahead do you want to plan? <span style="color:var(--faint)">(a season)</span></div>
+        <div class="rchips" id="seasonChips"></div>
+      </div>
+
+      <div class="nav"><button class="ghost" onclick="go(2)">Back</button>
+        <button class="btn" onclick="go(4)">Next</button></div>
+    </section>
+
+    <!-- 4: SIGNALS -->
+    <section class="screen" data-screen="4">
+      <div class="eyebrow">Step 4 · Signals <span style="color:var(--faint)">· optional</span></div>
+      <h2>What runs your life?</h2>
+      <p class="sub">Connect an input your mentors learn from. The weekly review reads it to see what actually happened. You can wire these up later.</p>
+      <div class="opts" id="signalOpts"></div>
+      <div class="nav"><button class="ghost" onclick="go(3)">Back</button>
+        <button class="btn" id="createBtn" onclick="finish()">Create my team</button></div>
+    </section>
+
+    <!-- 5: FINISH -->
+    <section class="screen" data-screen="5">
+      <div id="finishBody"></div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+//──────────────────────────── state ────────────────────────────
+const state = {
+  workspace:"", userName:"", location:"", notebookPath:"", mentors:[], signals:[],
+  timeCeiling:"120", timeLabel:"~1 hr a day",
+  reviewDay:"Sunday",
+  seasonDays:"90", seasonLabel:"90 days",
+};
+let serverMode = false;            // true if launched by start.sh (python)
+let notebookPath = "";             // returned by the launcher on scaffold
+let defaultParent = "~";           // where the notebook folder is created (parent dir)
+
+const SUGGESTIONS = [
+  ["fitness","#34d399"],["finances","#fbbf24"],["writing","#7dd3fc"],
+  ["music","#a78bfa"],["AI / ML","#7dd3fc"],["cooking","#fb7185"],
+  ["philosophy","#a78bfa"],["parenting","#fb7185"],["a language","#34d399"],
+  ["career","#fbbf24"],["a side project","#7dd3fc"]
+];
+const COLORS=["#34d399","#7dd3fc","#a78bfa","#fbbf24","#fb7185"];
+
+const SIGNALS = [
+  ["todoist","Todoist","Task completions, comments & reschedules — the primary signal","#e44332"],
+  ["calendar","Calendar","Locked commitments & energy patterns","#7dd3fc"],
+  ["slack","Slack","Work context & off-hours signal","#a78bfa"],
+];
+
+// rhythm options — [ceiling-min, title, sub]
+const TIME_OPTS = [
+  ["60","A little","~30 min/day"],
+  ["120","Some days","~1 hr/day"],
+  ["180","Most days","~2 hr/day"],
+  ["240","All in","3 hr+/day"],
+];
+const DAY_OPTS = ["Sunday","Monday","Friday","Saturday"];
+const SEASON_OPTS = [
+  ["28","4 weeks","a sprint"],
+  ["56","8 weeks","a block"],
+  ["90","90 days","a full season"],
+];
+
+//──────────────────────────── helpers ──────────────────────────
+const $ = s => document.querySelector(s);
+function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"");}
+function colorFor(i){return COLORS[i%COLORS.length];}
+// where the notebook folder will be created
+function folderName(){ return (slug($("#in_workspace").value) || "my-notebook"); }
+function fullPath(){
+  const loc = ($("#in_location").value || defaultParent || "~").replace(/\/+$/,"");
+  return loc + "/" + folderName();
+}
+function refreshPath(){ const el=$("#path_preview"); if(el) el.textContent = fullPath(); }
+//──────────────────────────── navigation ───────────────────────
+let cur = 0;
+const TOTAL = 5;
+function go(n){
+  if(cur===1){
+    state.workspace = $("#in_workspace").value.trim();
+    state.userName = $("#in_name").value.trim();
+    state.location = ($("#in_location").value || defaultParent || "~").replace(/\/+$/,"");
+    state.notebookPath = fullPath();
+  }
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  $(`[data-screen="${n}"]`).classList.add("on");
+  cur = n;
+  $("#bar").style.right = (100 - (n/TOTAL)*100) + "%";
+  if(n===2) syncMentorNext();
+  window.scrollTo(0,0);
+}
+
+//──────────────────────────── mentors ──────────────────────────
+function renderSuggestions(){
+  const used = new Set(state.mentors.map(slug));
+  $("#suggestions").innerHTML = SUGGESTIONS
+    .filter(([n])=>!used.has(slug(n)))
+    .map(([n,c])=>`<div class="chip" onclick="addMentor('${n.replace(/'/g,"\\'")}')">
+       <span class="dot" style="background:${c}"></span>${n}</div>`).join("");
+}
+function renderPicked(){
+  const el = $("#picked");
+  if(!state.mentors.length){ el.innerHTML = `<div class="empty">No mentors yet — tap a suggestion or type your own.</div>`; }
+  else{
+    el.innerHTML = state.mentors.map((m,i)=>{
+      const c = colorFor(i);
+      return `<div class="mentor"><div class="av" style="background:${c}">${m.trim()[0].toUpperCase()}</div>
+        <div class="nm">${m}</div><div class="x" title="remove" onclick="removeMentor(${i})">×</div></div>`;
+    }).join("");
+  }
+  syncMentorNext();
+}
+function syncMentorNext(){ $("#mentorNext").disabled = state.mentors.length===0; }
+function addMentor(name){
+  name = name.trim(); if(!name) return;
+  if(state.mentors.map(slug).includes(slug(name))) return;
+  state.mentors.push(name); renderSuggestions(); renderPicked();
+}
+function addMentorFromInput(){ const i=$("#in_mentor"); addMentor(i.value); i.value=""; i.focus(); }
+function removeMentor(i){ state.mentors.splice(i,1); renderSuggestions(); renderPicked(); }
+
+//──────────────────────────── rhythm ───────────────────────────
+function renderRhythm(){
+  $("#timeChips").innerHTML = TIME_OPTS.map(([min,t,s])=>
+    `<div class="rchip ${state.timeCeiling===min?'on':''}" onclick="pickTime('${min}','${s.replace(/'/g,"")} ')">
+       <b>${t}</b><small>${s}</small></div>`).join("");
+  $("#dayChips").innerHTML = DAY_OPTS.map(d=>
+    `<div class="rchip day ${state.reviewDay===d?'on':''}" onclick="pickDay('${d}')"><b>${d.slice(0,3)}</b></div>`).join("");
+  $("#seasonChips").innerHTML = SEASON_OPTS.map(([d,t,s])=>
+    `<div class="rchip ${state.seasonDays===d?'on':''}" onclick="pickSeason('${d}','${t}')">
+       <b>${t}</b><small>${s}</small></div>`).join("");
+}
+function pickTime(min,label){ state.timeCeiling=min; state.timeLabel=label.trim(); renderRhythm(); }
+function pickDay(d){ state.reviewDay=d; renderRhythm(); }
+function pickSeason(d,label){ state.seasonDays=d; state.seasonLabel=label; renderRhythm(); }
+
+//──────────────────────────── signals ──────────────────────────
+function renderSignals(){
+  $("#signalOpts").innerHTML = SIGNALS.map(([id,name,desc,c])=>{
+    const sel = state.signals.includes(id);
+    return `<div class="opt ${sel?'sel':''}" onclick="toggleSignal('${id}')">
+      <div class="oi" style="background:${c}22"><svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2"><path d="M4 12h4l3 8 4-16 3 8h2"/></svg></div>
+      <div><b>${name}</b><small>${desc}</small></div>
+      <div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#06120d" stroke-width="3"><path d="M5 12l4 4L19 6"/></svg></div></div>`;
+  }).join("") + `<div class="opt ${state.signals.length===0?'sel':''}" onclick="clearSignals()">
+      <div class="oi" style="background:#5b667522"><svg viewBox="0 0 24 24" fill="none" stroke="#8b97a7" stroke-width="2"><path d="M5 12h14"/></svg></div>
+      <div><b>Skip for now</b><small>Mentors still work — they just read fewer signals</small></div>
+      <div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#06120d" stroke-width="3"><path d="M5 12l4 4L19 6"/></svg></div></div>`;
+}
+function toggleSignal(id){
+  const i = state.signals.indexOf(id);
+  if(i<0) state.signals.push(id); else state.signals.splice(i,1);
+  renderSignals();
+}
+function clearSignals(){ state.signals=[]; renderSignals(); }
+
+//──────────────────────────── brief + finish ───────────────────
+function buildBrief(){
+  const today = new Date().toISOString().slice(0,10);
+  const mentors = state.mentors.length ? state.mentors.map(m=>`- ${m}  (slug: ${slug(m)})`).join("\n") : "- (none chosen — ask me)";
+  const signals = state.signals.length ? state.signals.map(s=>`- ${s}`).join("\n") : "- (none yet)";
+  return `# Trellis — intake brief
+*Generated by the onboarding wizard on ${today}. Read by PROTOCOL: INTAKE. These are STARTING choices — confirm them with me, don't treat them as final.*
+
+## Who
+- Name: ${state.userName || "(ask me at intake)"}
+- Notebook: ${state.workspace || "My Mentor Team"}
+- Client: Claude Cowork
+
+## Mentors to hire
+${mentors}
+
+## Rhythm (starting values — confirm with me)
+- Time I can give: ${state.timeLabel}
+- Weekly review day: ${state.reviewDay}
+- Season length: ${state.seasonLabel}
+
+## Signals to connect
+${signals}
+
+## What I want you to do
+Run PROTOCOL: INTAKE from framework/PROTOCOLS.md.
+1. The notebook scaffold + a folder per mentor above already exist (the wizard created them).
+2. Run Part A (know the person) once — write profile.md from our conversation, and confirm the rhythm values above.
+3. Run Part B (know the work) for EACH mentor, asking that domain's own expert questions.
+   Seed done_topics.md from what I've already done; end each with one real win and my sign-off.
+4. Note the signals above for wiring per connectors/ docs.
+Start now with Part A — talk to me, don't fill in forms.`;
+}
+function kickoffPrompt(){
+  return `You are my Trellis mentor team. I just finished the setup wizard. Read CLAUDE.md and framework/PROTOCOLS.md, then run PROTOCOL: INTAKE using the setup brief at the bottom of CLAUDE.md (also pasted below). Talk me through it — you ask, I answer, you write the files. Don't create a generic task list or dashboard.
+
+${buildBrief()}`;
+}
+
+function finish(){
+  go(5);
+  const body = $("#finishBody");
+  body.innerHTML = `<div class="eyebrow">Working…</div><h2>Setting things up</h2>
+    <p class="sub">One moment…</p>`;
+  // Re-check the local helper *right now* — it may have been closed since the
+  // page first loaded. This avoids a raw "Failed to fetch" on a dead server.
+  fetch("/api/health",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(h=>{
+    if(h&&h.ok){
+      serverMode=true;
+      body.innerHTML = `<div class="eyebrow">Building…</div><h2>Creating your notebook</h2>
+        <p class="sub">Scaffolding your mentor folders and writing your intake brief…</p>`;
+      return fetch("/api/scaffold",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(state)})
+        .then(r=>r.json()).then(d=>{ notebookPath = d.notebook||""; renderDone(!!d.ok,d); });
+    }
+    // Helper not reachable — fall back to the manual steps, calmly.
+    serverMode=false; renderDone(false,{offline:true});
+  }).catch(()=>{ serverMode=false; renderDone(false,{offline:true}); });
+}
+
+function chipRow(){
+  return `<span class="pill">${state.mentors.length} mentor${state.mentors.length===1?'':'s'}</span>
+    <span class="pill">${state.timeLabel}</span>
+    <span class="pill">${state.reviewDay} reviews</span>
+    ${state.signals.length?`<span class="pill">${state.signals.length} signal${state.signals.length===1?'':'s'}</span>`:''}`;
+}
+
+function renderDone(scaffolded,data){
+  const body = $("#finishBody");
+  if(scaffolded){
+    body.innerHTML = `
+      <div class="done-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><path d="M4 12l5 5L20 6"/></svg></div>
+      <h2>Your notebook is ready</h2>
+      <p class="sub">Created at <code class="path">${notebookPath}</code></p>
+      <div style="margin-bottom:18px">${chipRow()}</div>
+      <p class="sub" style="margin:0 0 8px"><b style="color:var(--ink)">Two steps to meet your mentors:</b></p>
+      <ol class="steps">
+        <li><div><b>Connect this folder to Claude Cowork.</b><small>Add the folder above to a Cowork project. Claude auto-reads the <code class="path">CLAUDE.md</code> inside it — that's what makes it your mentor team.</small></div></li>
+        <li><div><b>Say: <span style="color:var(--sky)">“start my intake”</span></b><small>Your mentors take it from there — they get to know you and do a first piece of real work.</small></div></li>
+      </ol>
+      <button class="copybtn" onclick="copyText(kickoffPrompt(),this)">Copy the kickoff message (optional)</button>
+      <div class="smallnote">Your choices are written into <code class="path">CLAUDE.md</code> — the file Claude reads automatically when you connect the folder — so you can just say “start my intake”. The copy button is a backup.</div>`;
+  } else {
+    const note = (data && data.offline)
+      ? `<div class="smallnote" style="color:var(--amber);text-align:left;margin:0 0 14px">The local setup helper isn’t running, so I couldn’t create the folder automatically — no problem. The three steps below do exactly the same thing by hand and always work. <br>(To use the automatic version instead: re-run <code class="path">./scripts/start.sh</code> in your terminal, then press <b>Retry</b>.)</div>`
+      : (data && data.error)
+        ? `<div class="smallnote" style="color:var(--amber);text-align:left;margin:0 0 14px">Couldn’t finish the automatic setup. The three steps below do the same thing by hand — they always work.</div>`
+        : "";
+    body.innerHTML = `
+      <div class="eyebrow">Almost there</div>
+      <h2>Finish in three steps</h2>
+      <div style="margin-bottom:14px">${chipRow()}</div>
+      ${note}
+      <ol class="steps">
+        <li><div><b>Create the notebook</b><small>In Terminal, from the Trellis folder, run:<br><code class="path">./scripts/init.sh --notebook "${state.notebookPath}" --domains "${state.mentors.map(slug).join(',')}" --review-day ${state.reviewDay} --season-length ${state.seasonDays} --time-ceiling ${state.timeCeiling}</code></small></div></li>
+        <li><div><b>Connect that folder to Claude Cowork</b><small>Add <code class="path">${state.notebookPath}</code> to a Cowork project.</small></div></li>
+        <li><div><b>Say “start my intake” in Cowork</b><small>It reads your choices and runs your intake. (Backup: paste the message below.)</small></div></li>
+      </ol>
+      <div class="promptbox">${kickoffPrompt().replace(/[&<]/g,c=>c==='&'?'&amp;':'&lt;')}</div>
+      <button class="copybtn" onclick="copyText(kickoffPrompt(),this)">Copy the kickoff message</button>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        ${(data&&data.offline)?`<button class="btn alt" style="flex:1;font-size:13px" onclick="finish()">Retry automatic setup</button>`:''}
+        <button class="btn alt" style="flex:1;font-size:13px" onclick="downloadBrief()">Download intake-brief.md</button>
+      </div>`;
+  }
+}
+
+function copyText(t,btn){
+  navigator.clipboard.writeText(t).then(()=>{
+    const o=btn.textContent; btn.textContent="Copied ✓"; setTimeout(()=>btn.textContent=o,1600);
+  },()=>{ alert("Copy failed — select the text manually."); });
+}
+function downloadBrief(){
+  const blob = new Blob([buildBrief()],{type:"text/markdown"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="intake-brief.md"; a.click(); URL.revokeObjectURL(a.href);
+}
+
+//──────────────────────────── boot ─────────────────────────────
+renderSuggestions(); renderPicked(); renderRhythm(); renderSignals();
+if($("#in_location") && !$("#in_location").value){ $("#in_location").value = defaultParent; }
+refreshPath();
+fetch("/api/health").then(r=>r.ok&&r.json()).then(d=>{
+  if(d&&d.ok){ serverMode=true;
+    if(d.defaultParent){ defaultParent=d.defaultParent; $("#in_location").value=d.defaultParent; }
+    if(d.workspace&&!$("#in_workspace").value){ $("#in_workspace").value=d.workspace; }
+    if(d.name){ $("#in_name").value=d.name; }
+    refreshPath();
+  }
+}).catch(()=>{ serverMode=false; });
+</script>
+</body>
+</html>
