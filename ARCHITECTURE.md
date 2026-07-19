@@ -5,50 +5,45 @@ A one-page tour of how Trellis is put together. For the deeper version: [`core/F
 ## The three layers
 
 ```
-┌────────────────────────────────────────────────────────────────┐
-│  LAYER 3 — Client                                              │
-│  Claude Desktop / Claude Code / Copilot / ChatGPT / other      │
-│  Drives the LLM, exposes tools, hosts the conversation.        │
-└──────────────────────────┬─────────────────────────────────────┘
-                           │ reads/writes markdown
-                           ▼
-┌────────────────────────────────────────────────────────────────┐
-│  LAYER 2 — Notebook (your personal data, your private repo)    │
-│                                                                 │
-│   CONFIG.md         — your parameters                          │
-│   profile.md        — behavioral observations                  │
-│   framework/        — copies of layer 1 protocols              │
-│   mentors/                                                      │
-│     ├── season_current.md      ┐                               │
-│     ├── coordinator_state.md   │  coordinator state            │
-│     ├── cross_domain.md        ┘                               │
-│     └── <domain>/                                              │
-│         ├── curriculum.md      ┐                               │
-│         ├── current_focus.md   │                               │
-│         ├── done_topics.md     │  per-domain notebook          │
-│         ├── intel.md           │                               │
-│         ├── log.md             │                               │
-│         ├── sessions/          │                               │
-│         └── archive/           ┘                               │
-└──────────────────────────┬─────────────────────────────────────┘
-                           │ generated from
-                           ▼
-┌────────────────────────────────────────────────────────────────┐
-│  LAYER 1 — Framework (Trellis distribution, this repo)         │
-│                                                                 │
-│   core/                                                         │
-│     ├── FIRST_PRINCIPLES.md   — the constitution               │
-│     ├── PROTOCOLS.md          — DOMAIN_SESSION, WEEKLY_REVIEW, │
-│     │                           MENTOR_REFRESH, etc.           │
-│     ├── WIKI_BRIDGE.md        — optional knowledge-base hook   │
-│     └── *.template            — parameterized starter files    │
-│                                                                 │
-│   templates/domain/           — scaffold per new mentor        │
-│   examples/example_domain/    — worked example                 │
-│   connectors/                 — adapter stubs                  │
-│   scripts/                    — init.sh, add-domain.sh, etc.   │
-│   docs/                       — guides per client / topic      │
-└────────────────────────────────────────────────────────────────┘
+LAYER 3 — Client
+  Claude Desktop / Claude Code / Copilot / ChatGPT / other
+  Drives the LLM, exposes tools, hosts the conversation.
+        │  reads / writes markdown
+        ▼
+LAYER 2 — Notebook (your personal data, your private repo)
+  CLAUDE.md          — entry point the client auto-loads
+  CONFIG.md          — your parameters
+  profile.md         — behavioral observations
+  framework/         — personalized copies of the layer-1 protocol docs
+  .claude/skills/    — WEEKLY_REVIEW + DOMAIN_SESSION (load verbatim on trigger)
+  mentors/
+    ├── MEMORY.md            — lessons · facts · asks (the always-read trust layer)
+    ├── season_current.md    ┐
+    ├── coordinator_state.md │  coordinator state
+    ├── cross_domain.md      ┘
+    └── <domain>/
+        ├── curriculum.md    ┐
+        ├── current_focus.md │
+        ├── done_topics.md   │  per-domain notebook
+        ├── intel.md         │
+        ├── log.md           │
+        ├── sessions/        │
+        └── archive/         ┘
+        │  generated from
+        ▼
+LAYER 1 — Framework (Trellis distribution, this repo)
+  core/
+    ├── FIRST_PRINCIPLES.md   — the constitution
+    ├── PROTOCOLS.md          — INTAKE + rare protocols + skill stubs
+    ├── MEMORY.md.template    — the always-read memory file (empty-seeded)
+    ├── WIKI_BRIDGE.md        — optional knowledge-base hook
+    └── *.template            — parameterized starter files
+  .claude/skills/            — weekly-review + domain-session (installed into the notebook)
+  templates/domain/           — scaffold per new mentor
+  examples/example_domain/    — worked example
+  connectors/                 — adapter stubs
+  scripts/                    — init.sh, add-domain.sh, etc.
+  docs/                       — guides per client / topic
 ```
 
 ## How a session flows (end-to-end)
@@ -61,6 +56,7 @@ A one-page tour of how Trellis is put together. For the deeper version: [`core/F
    b. reads framework/PROTOCOLS.md             (the spec)
    c. identifies trigger: DOMAIN_SESSION on `writing`
    d. PREPARE:
+      - reads mentors/MEMORY.md                (lessons · facts · asks)
       - reads mentors/writing/done_topics.md   (never reassign work)
       - reads mentors/writing/current_focus.md (where we left off)
       - reads mentors/writing/curriculum.md    (where we're going)
@@ -76,6 +72,7 @@ A one-page tour of how Trellis is put together. For the deeper version: [`core/F
       - appends to done_topics.md
       - updates current_focus.md
       - optionally edits curriculum.md if it adapted
+      - writes any correction / fact / ask back to mentors/MEMORY.md
 4. LLM → Client → User    confirms the writes, ends session
 ```
 
@@ -88,21 +85,25 @@ A one-page tour of how Trellis is put together. For the deeper version: [`core/F
      - reads connectors (if configured) for completion data + comments
      - reads each active domain's log/focus
      - reads coordinator_state.md, cross_domain.md, profile.md
+     - reads mentors/MEMORY.md (lessons · facts · asks; increments ask ages)
      - synthesizes WEEK_BRIEF
    ⏸ Checkpoint 1: user confirms the brief
    Phase 2: spawn parallel mentor agents
      - one Task per active domain (real parallelism)
-     - each mentor reads its own folder + WEEK_BRIEF
-     - each runs the critical-thinking pass
+     - each mentor reads MEMORY.md first, then its own folder + WEEK_BRIEF
+     - each runs the critical-thinking pass + emits PREFLIGHT + THREE_MOVES
      - each returns a structured report
    Phase 3: synthesize
      - resolve cross-domain conflicts
+     - escalate any aged ask (MEMORY.md → ASKS)
      - update coordinator_state.md (high-stakes register, watches, etc.)
+     - run the self-verification pass on the plan before you see it
    ⏸ Checkpoint 2: user approves the plan
    Phase 4: write outputs
      - per-domain: update current_focus.md, log.md if a journal happened
      - update coordinator_state.md (Phase 3 step 3.5)
      - update cross_domain.md if anything new emerged
+     - write MEMORY.md back (new lessons, facts, ask ages / closures)
    Phase 5: present
      - brief summary + per-domain next-week plan
 ```

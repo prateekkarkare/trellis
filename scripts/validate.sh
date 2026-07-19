@@ -57,13 +57,18 @@ echo "---"
 for f in CLAUDE.md CONFIG.md profile.md README.md; do check_file "$f"; warn_if_unsub "$f"; done
 
 # Mentors
-for f in mentors/season_current.md mentors/coordinator_state.md mentors/cross_domain.md; do
+for f in mentors/MEMORY.md mentors/season_current.md mentors/coordinator_state.md mentors/cross_domain.md; do
   check_file "$f"; warn_if_unsub "$f"
 done
 
 # Framework copies
 for f in framework/FIRST_PRINCIPLES.md framework/PROTOCOLS.md framework/WIKI_BRIDGE.md; do
   check_file "$f"
+done
+
+# Skills (the two high-frequency procedures, loaded verbatim on trigger)
+for f in .claude/skills/weekly-review/SKILL.md .claude/skills/domain-session/SKILL.md; do
+  check_file "$f"; warn_if_unsub "$f"
 done
 
 # Per-domain

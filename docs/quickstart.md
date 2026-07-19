@@ -58,7 +58,9 @@ my-notebook/
 ├── CONFIG.md                 # your settings (name, rhythm, client)
 ├── profile.md               # empty — your mentor fills this in the conversation
 ├── framework/               # the operating manual the mentor reads (PROTOCOLS.md, …)
+├── .claude/skills/          # WEEKLY_REVIEW + DOMAIN_SESSION (load verbatim on trigger)
 ├── mentors/
+│   ├── MEMORY.md            # empty — fills as you correct your mentors (lessons·facts·asks)
 │   ├── season_current.md
 │   ├── <each mentor you picked>/   # one folder per mentor, marked "needs intake"
 │   └── …

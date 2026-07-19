@@ -1,0 +1,113 @@
+# MEMORY — Lessons · Facts · Asks
+*The single always-loaded memory file (one file, three sections). Read IN FULL by every mentor agent and at every DOMAIN_SESSION PREPARE.*
+
+> **Why this file exists.** A mentor system that records its mistakes in files the plan-generating agent never reads is not learning — it is keeping a diary. This file puts the system's own corrections, facts, and open asks **into the generation path**, so a correction given in week N provably changes behaviour in week N+1. It is deliberately small; keeping it small is a hard requirement, not a nicety.
+>
+> **The three sections and their one-line jobs:**
+> - **LESSONS** — every correction the user gives becomes a pre-flight RULE. Read by every mentor before it drafts.
+> - **FACTS** — binding facts + a Never-Repeat list. A plan that contradicts a fact is wrong by definition.
+> - **ASKS** — an open-ask ledger with mechanical, age-based escalation, so a persistent unmet ask escalates itself instead of quietly persisting.
+
+---
+
+## LESSONS — The Mistake→Lesson Loop
+*The always-loaded correction memory.*
+
+> **What this file is.** Every correction {{USER_NAME}} gives becomes a RULE here, phrased as a pre-flight check. This section is READ BY EVERY MENTOR AGENT and at every DOMAIN_SESSION PREPARE — it is in the generation path, which is the whole point. The failure it prevents: a correction recorded only in `coordinator_state.md` / `profile.md` / a domain `log.md` that the weekly mentor agents never read, so the same root cause fires again and again.
+>
+> **Write rule.** Any principal correction (a "this is wrong" flag, a factual error caught, a "weakly planned / mundane" rebuke, a contradicted fact) MUST produce a new lesson or increment an existing lesson's violation count **in the same JOURNAL/review pass**. No correction leaves the session unrecorded.
+>
+> **Enforcement.** Each mentor report answers the PRE-FLIGHT questions in its PREFLIGHT section (one line each: pass / fail+fix). Unanswered = report incomplete and regenerated.
+>
+> **Recurrence escalation.** If a lesson's violation count reaches 2 after adoption, the lesson's phrasing has failed — the fix must become STRUCTURAL (a protocol edit, a curriculum edit, a file-format change), not another prose reminder. Note the escalation here.
+>
+> **Size cap.** ≤ 40 active lessons / ~150 lines. At each SEASON_TRANSITION: retire lessons absorbed into protocol/curriculum (move to `coordinator_history/<YYYY>.md` with a tombstone), merge duplicates, delete wrong ones.
+
+---
+
+### Active Lessons
+
+<!--
+FORMAT (copy this shape for each new lesson; delete this comment once you have real lessons):
+
+**L1 · Short name** *(adopted YYYY-MM-DD; one line on the incident that earned it)*
+RULE: The single behaviour the mentor must follow, phrased as an imperative.
+PRE-FLIGHT: The yes/no question every mentor answers before drafting.
+Violations since adoption: 0
+-->
+
+*(none yet — your first correction to a mentor becomes L1. Add it the moment it happens.)*
+
+---
+
+### Retired Lessons
+*(none yet — retirements happen at SEASON_TRANSITION with a tombstone here and full text in `coordinator_history/<YYYY>.md`)*
+
+
+---
+
+## FACTS — Durable Fact & Never-Repeat Ledger
+*The always-loaded ground-truth memory.*
+
+> **What this file is.** The short list of load-bearing facts {{USER_NAME}} has stated that a fresh-drafted plan must never contradict, plus the Never-Repeat list of declined items. READ BY EVERY MENTOR AGENT and at every DOMAIN_SESSION PREPARE. Forgetting failures (re-proposing done work, re-asserting a corrected fact, re-serving a declined item) happen because facts live only in prose the drafting agent doesn't reread, or get overridden by a fresh draft.
+>
+> **Write rule.** When {{USER_NAME}} states a fact that (a) contradicts something the system assumed, or (b) closes off a direction, add one line here in the same pass. Facts are dated. When a fact is superseded, edit it in place and note the change — never leave two versions (that is the drift P8 forbids).
+>
+> **This is a POINTER layer, not a second source of truth.** Each fact names its canonical home file. FACTS exists so the drafting agent reliably *sees* the fact cheaply; the detailed version lives in its home. Keep entries to one line. DRIFT_CHECK reconciles each fact against its home every week.
+>
+> **Size cap.** ~40 facts. Retire facts that are no longer live (season over, decision executed) at SEASON_TRANSITION.
+
+---
+
+### Binding Facts (a plan conflicting with these is wrong by definition)
+
+| # | Fact (dated) | Canonical home |
+|---|---|---|
+| — | *(none yet — add the first fact the moment {{USER_NAME}} corrects a system assumption or closes a direction)* | |
+
+### Never-Repeat (declined items — permanently off the menu)
+
+| Item | Domain | Declined |
+|---|---|---|
+| — | | *(none yet — anything {{USER_NAME}} explicitly declines lands here and never returns)* |
+
+---
+*Add a fact the moment the principal corrects the system. A fact caught late is a forgetting failure.*
+
+
+---
+
+## ASKS — Open Request Ledger & Escalation Board
+*The self-escalating signal tracker.*
+
+> **Canonical ownership (P8).** This section is the SINGLE canonical ledger for open recurring asks and their ages. `coordinator_state.md` may reference an ask for cross-domain context but does not re-track its age/owner/status. One ask, one home.
+>
+> **What this file is.** Every explicit ask {{USER_NAME}} makes that isn't closeable in one week gets a row here with the date first raised and an owner. READ BY THE COORDINATOR at every WEEKLY_REVIEW Phase 1; its OPEN high-age rows are surfaced at Checkpoint 1 automatically. This fixes the worst signal failure: a persistent unmet ask that quietly persists for weeks because it has no home that forces attention.
+>
+> **The escalation rule (mechanical, not judgment).**
+> - **Age 0–1 review:** normal — an owner is assigned, a deliverable named.
+> - **Age 2 reviews unmet:** ESCALATE. An existing mentor is named owner with a specific weekly deliverable. Surfaced at Checkpoint 1 as an escalation, not a status line.
+> - **Age 3+ reviews unmet:** BLOCKING. It becomes a mandatory Mentor Challenge at Checkpoint 2 — the coordinator must present why it keeps failing and propose a structural change (drop it, change owner, or change the approach). An ask cannot silently persist past age 3.
+>
+> **Close rule.** An ask closes ONLY with a shipped artifact + {{USER_NAME}}'s explicit confirmation. "Owner assigned" is not closed. "Mentor thinks it's handled" is not closed. Self-declared resolution is prohibited.
+>
+> **Write rule.** Add a row the moment an ask is stated. Increment `Age` (in reviews) every WEEKLY_REVIEW it stays open. Never delete an open ask; move closed ones to the Closed table with the closing artifact named.
+
+---
+
+### Open Asks
+
+| # | Ask (verbatim gist) | First raised | Age (reviews) | Owner | This week's named deliverable | Status |
+|---|---|---|---|---|---|---|
+| — | *(none yet — the first ask that outlives one week gets a row here)* | | 0 | | | OPEN |
+
+> **Age is an integer = number of WEEKLY_REVIEWs this ask has been open.** Increment by 1 each review until closed.
+
+### Closed Asks
+
+| # | Ask | Raised → Closed | Closing artifact (confirmed) |
+|---|---|---|---|
+| — | (none yet) | | |
+
+---
+*If a row hits Age 2, it is not a status line — it is an escalation. If it hits Age 3, it blocks Checkpoint 2. The mechanism does the remembering so the coordinator can't quietly let an ask rot.*

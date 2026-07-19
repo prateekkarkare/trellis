@@ -18,7 +18,7 @@ Most "AI assistant" setups die after a few weeks because:
 3. **They sprawl.** No consistent place to find what was decided, what's next, what's behind.
 4. **They lock you in.** Your context lives inside a vendor's UI.
 
-Trellis fixes all four with a single idea: **the mentor keeps the notebook, not the user.** The LLM reads the relevant pages before every session, has the conversation, writes the journal entry, updates the catalog of completed topics, and edits the focus sheet. You write by talking. The system runs on plain text files in a git repo you own. It outlives any specific tool.
+Trellis fixes all four with a single idea: **the mentor keeps the notebook, not the user.** The LLM reads the relevant pages before every session, has the conversation, writes the journal entry, updates the catalog of completed topics, and edits the focus sheet. And a single always-read memory file (`MEMORY.md`) turns every correction you give into a rule the system reads back before it plans again — so when you correct it, it *stays* corrected, and a stated fact won't be contradicted next week. You write by talking. The system runs on plain text files in a git repo you own. It outlives any specific tool.
 
 ---
 
@@ -28,9 +28,11 @@ Trellis fixes all four with a single idea: **the mentor keeps the notebook, not 
 Trellis/
 ├── core/                   # The protocol layer — operating manual for the mentor team
 │   ├── FIRST_PRINCIPLES.md     # The constitution. 9 principles. Read first.
-│   ├── PROTOCOLS.md            # INTAKE, DOMAIN_SESSION, WEEKLY_REVIEW, etc.
+│   ├── PROTOCOLS.md            # INTAKE, the rare protocols, and stubs for the two skills
+│   ├── MEMORY.md.template      # The always-read memory file: lessons · facts · asks
 │   ├── WIKI_BRIDGE.md          # How mentors interact with an external knowledge base
 │   └── *.template              # Parameterized starter docs (profile, season, coordinator)
+├── .claude/skills/          # WEEKLY_REVIEW + DOMAIN_SESSION — load verbatim on trigger
 ├── onboarding/              # The visual setup wizard (single-file HTML)
 ├── templates/domain/       # Scaffold for a new domain mentor — copied per domain
 ├── examples/example_domain/    # One fully-populated worked example to learn from
@@ -72,7 +74,7 @@ Every step, no assumptions: **[docs/quickstart.md](docs/quickstart.md)**. (Prefe
 
 ## How it works (one paragraph)
 
-You onboard through a **visual wizard** (`./scripts/start.sh`) — name your notebook, pick your mentors, set your rhythm; it scaffolds your notebook and a folder per mentor. You connect that folder to **Claude Cowork** and say *"start my intake."* Then comes the one-time **intake**: each mentor runs its own first conversation — gets to know you, asks the questions an expert in *that* domain would, co-designs the goals, and does a first piece of real work — so day one delivers value instead of a folder of empty templates. After that, each domain (fitness, music, a side project, parenting) gets a folder of plain markdown files: a curriculum, a catalog of done topics, a focus sheet, a session journal, an optional intel page. The LLM acting as that domain's mentor reads these before every session — most importantly the **done topics** so it never reassigns finished work. The mentor coaches the conversation, then writes a session page, updates the catalog, edits the focus sheet, and trims the log. A **coordinator** runs a weekly review across all domains: pulls signals from your task tracker if connected, spawns one mentor agent per active domain in parallel, synthesizes their reports, pauses for your input twice (signal check, plan check), then writes the next week's plan. A **season** is a 90-day arc with explicit exit criteria — at season end, archives roll up, and you design the next one.
+You onboard through a **visual wizard** (`./scripts/start.sh`) — name your notebook, pick your mentors, set your rhythm; it scaffolds your notebook and a folder per mentor. You connect that folder to **Claude Cowork** and say *"start my intake."* Then comes the one-time **intake**: each mentor runs its own first conversation — gets to know you, asks the questions an expert in *that* domain would, co-designs the goals, and does a first piece of real work — so day one delivers value instead of a folder of empty templates. After that, each domain (fitness, music, a side project, parenting) gets a folder of plain markdown files: a curriculum, a catalog of done topics, a focus sheet, a session journal, an optional intel page. The LLM acting as that domain's mentor reads these before every session — most importantly the **done topics** so it never reassigns finished work, and a small always-read **memory file** of your past corrections and stated facts so it doesn't repeat old mistakes. The mentor coaches the conversation, then writes a session page, updates the catalog, edits the focus sheet, and trims the log. A **coordinator** runs a weekly review across all domains: pulls signals from your task tracker if connected, spawns one mentor agent per active domain in parallel, synthesizes their reports, pauses for your input twice (signal check, plan check), then writes the next week's plan. A **season** is a 90-day arc with explicit exit criteria — at season end, archives roll up, and you design the next one.
 
 The full architecture: [core/FIRST_PRINCIPLES.md](core/FIRST_PRINCIPLES.md). The full operating manual: [core/PROTOCOLS.md](core/PROTOCOLS.md).
 

@@ -230,12 +230,28 @@ for f in FIRST_PRINCIPLES.md PROTOCOLS.md WIKI_BRIDGE.md; do
   ok "wrote framework/$f"
 done
 
+# --- skills: the two high-frequency procedures, installed into the notebook -
+# WEEKLY_REVIEW and DOMAIN_SESSION live as skills so their full text loads
+# verbatim on trigger instead of depending on the whole manual being read.
+# Claude auto-discovers skills under .claude/skills/. Refreshed every run.
+for skill in weekly-review domain-session; do
+  if [[ -f "$FRAMEWORK_ROOT/.claude/skills/$skill/SKILL.md" ]]; then
+    mkdir -p "$NOTEBOOK_ROOT/.claude/skills/$skill"
+    sed \
+      -e "s|{{USER_NAME}}|$USER_NAME|g" \
+      -e "s|{{WORKSPACE_NAME}}|$WORKSPACE_NAME|g" \
+      "$FRAMEWORK_ROOT/.claude/skills/$skill/SKILL.md" > "$NOTEBOOK_ROOT/.claude/skills/$skill/SKILL.md"
+    ok "wrote .claude/skills/$skill/SKILL.md"
+  fi
+done
+
 # --- personalized top-level files -----------------------------------------
 substitute "$FRAMEWORK_ROOT/core/CONFIG.md.template"            "$NOTEBOOK_ROOT/CONFIG.md"
 substitute "$FRAMEWORK_ROOT/core/profile.md.template"           "$NOTEBOOK_ROOT/profile.md"
 substitute "$FRAMEWORK_ROOT/core/season_current.md.template"    "$NOTEBOOK_ROOT/mentors/season_current.md"
 substitute "$FRAMEWORK_ROOT/core/coordinator_state.md.template" "$NOTEBOOK_ROOT/mentors/coordinator_state.md"
 substitute "$FRAMEWORK_ROOT/core/cross_domain.md.template"      "$NOTEBOOK_ROOT/mentors/cross_domain.md"
+substitute "$FRAMEWORK_ROOT/core/MEMORY.md.template"            "$NOTEBOOK_ROOT/mentors/MEMORY.md"
 
 # --- create each domain from template (only if --domains was passed) -------
 if (( ${#SLUG_DOMAINS[@]} )); then
@@ -269,6 +285,7 @@ A personal mentor's-notebook built on [Trellis](https://github.com/your/Trellis)
 - \`mentors/\` — one folder per domain
 - \`mentors/season_current.md\` — what's Active / Seeding / Silent this season
 - \`mentors/coordinator_state.md\` — the coordinator's working memory
+- \`mentors/MEMORY.md\` — lessons, facts, and open asks; the mentor reads this every session and writes your corrections back to it
 - \`mentors/cross_domain.md\` — bridges between domains
 - \`framework/\` — copies of the protocol docs (replace by re-running init.sh after a framework update)
 
@@ -367,13 +384,14 @@ this file):
    |---|---|
    | "start my intake" / "set me up" | INTAKE (first run) |
    | "hire a \<domain\> mentor" | INTAKE — Part B for the new mentor |
-   | "let's do a session on \<domain\>" | DOMAIN_SESSION |
-   | "weekly review" | WEEKLY_REVIEW |
+   | "let's do a session on \<domain\>" | DOMAIN_SESSION (loads from \`.claude/skills/domain-session\`) |
+   | "weekly review" | WEEKLY_REVIEW (loads from \`.claude/skills/weekly-review\`) |
    | "season review" | SEASON_TRANSITION |
 
 3. Run it exactly as written. Honor every checkpoint (pause and ask). You are not a yes-man —
-   run the critical-thinking pass.
-4. **At the end, write the files.** You keep the notebook, not the user (FIRST_PRINCIPLES P2/P3).
+   run the critical-thinking pass. Read \`mentors/MEMORY.md\` (lessons/facts/asks) before you draft.
+4. **At the end, write the files** — including writing any correction, new fact, or open ask back to
+   \`mentors/MEMORY.md\`. You keep the notebook, not the user (FIRST_PRINCIPLES P2/P3).
 
 ## Where things live (all inside THIS folder — never read or write outside it)
 
@@ -382,7 +400,9 @@ this file):
 - \`CONFIG.md\` — settings (name, rhythm, client)
 - \`profile.md\` — who the user is (you fill this in during intake)
 - \`mentors/<domain>/\` — one folder per mentor; read \`done_topics.md\` before proposing work
+- \`mentors/MEMORY.md\` — lessons/facts/asks; read it every session, write corrections back to it
 - \`mentors/season_current.md\` — what's active this season
+- \`.claude/skills/\` — the WEEKLY_REVIEW and DOMAIN_SESSION procedures (load verbatim on trigger)
 
 <!-- SETUP_BRIEF_START -->
 ## Setup brief

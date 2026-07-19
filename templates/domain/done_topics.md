@@ -27,7 +27,7 @@
 
 1. Append a row for the topic worked on.
 2. Update the *Last updated* line at the top.
-3. Commit via `scripts/sync.sh (optional)` (auto-called by SYNC protocol).
+3. Optionally commit (`git commit`, or the `scripts/sync.sh` wrapper) — sync never blocks a session.
 
 ## How the mentor reads this file (PREPARE, start of every domain session)
 

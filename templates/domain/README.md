@@ -168,11 +168,11 @@ From `mentors/PROTOCOLS.md`. The four operations a human mentor performs:
 
 - **PREPARE** (DOMAIN_SESSION steps 0–10 read phase) — read done_topics.md first (P1), then curriculum.md, current_focus.md, log.md, intel.md, knowledge-store wiki references.
 - **COACH** (DOMAIN_SESSION conversation) — have the session. Push back when warranted. Calibrate.
-- **JOURNAL** (DOMAIN_SESSION step 11) — write the session page; update log.md, done_topics.md, current_focus.md; optionally curriculum.md and a hand-off to knowledge-store wiki; trigger SYNC.
+- **JOURNAL** (DOMAIN_SESSION step 11) — write the session page; update log.md, done_topics.md, current_focus.md; optionally curriculum.md and a hand-off to the knowledge-store wiki; write back any correction/fact/ask to `mentors/MEMORY.md`; optionally commit.
 - **AUDIT** (DRIFT_CHECK, run inside WEEKLY_REVIEW) — reconcile catalog drift, detect repeat topics, flag contradictions and staleness.
 
 ## The rule that holds everything together
 
-> Markdown prose is the source of truth. The mentor (LLM) is the writer. The user ({{USER_NAME}}) writes by talking. There are no structured writes, no validators, no CLIs in the user-facing loop. Auto-sync (`scripts/sync.sh (optional)` via LaunchAgent) is the only background mechanism.
+> Markdown prose is the source of truth. The mentor (LLM) is the writer. The user ({{USER_NAME}}) writes by talking. There are no structured writes, no validators, no CLIs in the user-facing loop. Version control is optional (`git commit`, or the `scripts/sync.sh` wrapper) and never blocks a session.
 
 See `/FIRST_PRINCIPLES.md` for the full statement (P1–P9).

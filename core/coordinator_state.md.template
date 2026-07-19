@@ -5,6 +5,8 @@
 *Read by: the coordinator at the start of every WEEKLY_REVIEW and by Domain Mentors with `Stakes: high_external` in their `current_focus.md`.*
 
 > **200-line cap.** When this file grows past 200 lines, overflow flushes to `coordinator_history/<YYYY>.md`. Keeps weekly-review cost bounded.
+>
+> **Recurring asks live in `MEMORY.md → ASKS`, not here (P8: one ask, one home).** This file may *reference* an ask for cross-domain context, but the age/owner/status ledger and the mechanical age-based escalation belong to `mentors/MEMORY.md → ASKS`. Do not re-track an ask's age here.
 
 ---
 

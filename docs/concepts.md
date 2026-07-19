@@ -34,7 +34,7 @@ Every protocol in the system is a specialization of four basic operations:
 | **JOURNAL** | After | Write the session page. Update the catalog. Update the focus sheet. Edit the curriculum if it shifted. |
 | **AUDIT** | Periodically | Re-read the folder for drift, contradictions, stale claims. Happens inside the weekly review. |
 
-Named protocols in `core/PROTOCOLS.md` (DOMAIN_SESSION, WEEKLY_REVIEW, MENTOR_REFRESH, SEASON_TRANSITION, DRIFT_CHECK) are these four operations specialized to different cadences and scopes.
+Named protocols in `core/PROTOCOLS.md` (INTAKE, DOMAIN_SESSION, WEEKLY_REVIEW, MENTOR_REFRESH, SEASON_TRANSITION, DRIFT_CHECK) are these four operations specialized to different cadences and scopes. The two high-frequency ones (DOMAIN_SESSION, WEEKLY_REVIEW) load their full steps from `.claude/skills/`.
 
 ---
 
@@ -90,7 +90,21 @@ A naïve LLM agrees with whatever you said last. The protocols include explicit 
 
 If 2+ of these flags fire, the mentor escalates the question to you at the next checkpoint rather than silently changing course. This is the system's main defense against "I just want to be told yes".
 
-See `core/PROTOCOLS.md` → `WEEKLY_REVIEW` Phase 2 step 7 for the full spec.
+See `.claude/skills/weekly-review/SKILL.md` → Phase 2 step 7 for the full spec.
+
+---
+
+## Memory: how the system learns
+
+A naïve assistant forgets your corrections the moment the thread ends. Trellis puts them in a single always-read file, `mentors/MEMORY.md`, with three sections — and every mentor reads it *before* it drafts:
+
+- **LESSONS** — every correction you give becomes a one-line pre-flight RULE. Because mentors answer these rules (pass/fail) in a PREFLIGHT block before proposing anything, a correction you give in week N provably changes behaviour in week N+1. If a lesson is violated twice, the fix must become structural, not another reminder.
+- **FACTS** — the load-bearing facts you've stated (plus a Never-Repeat list of things you've declined). A plan that contradicts a fact is wrong by definition. It's a *pointer* layer — each fact names its home file — so it doesn't create drift; the weekly DRIFT_CHECK reconciles it.
+- **ASKS** — a ledger of open requests with a mechanical, age-based escalation: an ask unmet for 2 reviews escalates to a named owner; unmet for 3, it becomes a challenge you *must* see. No urgent ask can quietly rot for weeks.
+
+This is the difference between a system that keeps a diary of its mistakes and one that actually reads them back — and it's the minimum trust layer for a second user: when you correct it, it stays corrected.
+
+Two supporting mechanisms in the weekly review reinforce it: a **THREE_MOVES** step forces each mentor to produce a non-obvious move (not a checklist), and a **self-verification pass** checks the plan against FACTS / Never-Repeat / locked slots / done-work *before* you see it — so the system catches its own errors instead of you catching them after.
 
 ---
 
