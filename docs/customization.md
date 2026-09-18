@@ -34,7 +34,7 @@ Some domains do better on different cadences (a multi-year reading goal, a 30-da
 
 Different LLM clients mount your notebook differently. The protocols define `[ROOT]` as the directory that contains `CLAUDE.md` and `mentors/`, with a `find … -name MEMORY.md -path '*/mentors/*'` fallback for sandboxed mounts (Cowork's `/sessions/<id>/mnt/…`).
 
-If your client mounts files differently, edit the **PATH DISCOVERY** block near the top of `core/PROTOCOLS.md` (in your notebook's `framework/` copy) and at the top of both skills. For most clients the simplification is:
+If your client mounts files differently, edit the **PATH & DATE DISCOVERY** block near the top of `core/PROTOCOLS.md` (in your notebook's `framework/` copy) and at the top of both skills — leave the `date` line in place; change only the notebook-root discovery. For most clients the simplification is:
 
 ```
 The user's notebook is at `<NOTEBOOK_ROOT>` (see CONFIG.md).

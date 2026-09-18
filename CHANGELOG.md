@@ -5,7 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-_Nothing yet — the next port from the reference notebook lands here (see `SYNC.md`)._
+### Added
+- **Date-check folded into PATH DISCOVERY.** The section is renamed **PATH & DATE DISCOVERY** and its first instruction is now `date` (or `TZ=… date`) — take "today" only from the shell clock, never from conversation context, file timestamps, or the user's own day references. Applied in `core/PROTOCOLS.md` and both skills; `docs/customization.md` updated. Previously this was prose a hand-added `CONFIG.md` rule; now it is the first line of the step every protocol already runs. Motivated by a recurring failure class (tasks recreated on the wrong day, review windows miscounted).
 
 ## [0.2.0] — 2026-09-08
 
