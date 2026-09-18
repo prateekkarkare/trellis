@@ -62,6 +62,15 @@ You can change this value any time — protocols re-read this file at the start 
 
 - **CLIENT**: {{CLIENT}} (claude-cowork)
 
+## Planning model
+
+*Which model runs the judgment roles — the domain mentors' next-step proposals, the coordinator's reconciliation, and the verifier (`PROTOCOLS.md` → MODEL ROUTING). Set it to the strongest model you have access to; a bad week costs more than the inference did. Collection, extraction and formatting can run on anything.*
+
+- **PLANNING_MODEL**: the strongest model available in your client (set this to a concrete model name, e.g. your client's top reasoning tier)
+- **PLANNING_EFFORT**: highest reasoning level your client exposes, if it has the setting (otherwise leave blank)
+
+Binding a role to a model is client-specific — see `docs/client-setup/` for your client. Many clients give dispatched agents the *parent* session's model, so the reliable route is to start the weekly review in a session already on `PLANNING_MODEL`.
+
 ---
 
 > **The `{{...}}` placeholders are filled by the scaffolder (`init.sh`), using your wizard choices. The starting values are confirmed or changed with you during intake.**

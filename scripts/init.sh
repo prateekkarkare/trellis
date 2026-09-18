@@ -397,6 +397,19 @@ this file):
 4. **At the end, write the files** — including writing any correction, new fact, or open ask back to
    \`mentors/MEMORY.md\`. You keep the notebook, not the user (FIRST_PRINCIPLES P2/P3).
 
+## Who decides what
+
+Planning and coordination are judgment work: run them on the strongest model you have
+(\`CONFIG.md → PLANNING_MODEL\`), and economize on collection and formatting instead —
+\`framework/PROTOCOLS.md\` → MODEL ROUTING.
+
+Each domain mentor owns its own assessment, method, curriculum and next-step recommendation.
+The coordinator owns the evidence, the capacity arithmetic, the sequencing and the writes: it
+**questions** a mentor's proposal for relevance and timing, and the mentor answers keep / revise /
+withdraw — but it never writes a domain's plan itself, and a missing mentor report is a disclosed
+gap, not something to cover. Unresolved disagreements go to the user. See
+\`framework/PROTOCOLS.md\` → DOMAIN OWNERSHIP.
+
 ## Where things live (all inside THIS folder — never read or write outside it)
 
 - \`framework/PROTOCOLS.md\` — the operating manual (every protocol, step by step)

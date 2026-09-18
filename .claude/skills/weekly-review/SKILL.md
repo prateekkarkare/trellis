@@ -82,7 +82,7 @@ List the files. Anything {{USER_NAME}} wrote (a note in a wired knowledge store,
 
 **Step 1.3 — Compute dates.** Run `date`, then compute: past week (the Mon–Sun that just ended) · next week (the Mon–Sun coming up) · season week number (count from season start date in season_current.md) · weeks remaining in season (count to season end date).
 
-**Step 1.4 — Identify active domains.** From season_current.md, list all domains with state = Active or Seeding. These domains get a mentor agent in Phase 2. Silent domains are skipped.
+**Step 1.4 — Identify active domains and confirm routing.** From season_current.md, list all domains with state = Active or Seeding. These domains get a mentor agent in Phase 2. Silent domains are skipped. Then confirm you are running where `framework/PROTOCOLS.md → MODEL ROUTING` says the judgment roles should run: the live model for this session should be `CONFIG.md → PLANNING_MODEL`, because mentor agents typically inherit it. Record the resolved model (and reasoning level, if your client exposes one) for the write receipt. If it is something weaker, say so in the Checkpoint 1 message and let {{USER_NAME}} decide whether to continue — do not proceed silently at a weaker tier and call the result a full review. If your notebook is in git, run `git status --short` now and keep the output; Step 3.4b compares against it.
 
 **Step 1.5 — Build the WEEK_BRIEF.** This structured block is passed verbatim to every mentor agent. Fill it in precisely — it is the only signal mentors have about what actually happened.
 
@@ -184,31 +184,32 @@ If AskUserQuestion is unavailable in this run, post the checkpoint text and stop
 **When {{USER_NAME}} replies:** "looks good" → proceed to Phase 2 with no changes. Adds context → update WEEK_BRIEF with it, then proceed to Phase 2.
 
 ### PHASE 2 — PARALLEL MENTOR CONSULTATION
-*Spawn all mentor agents in a SINGLE message (one Agent tool call per domain, all in parallel).*
+*Spawn all mentor agents in a SINGLE message (one Agent tool call per domain, all in parallel). Routing per `framework/PROTOCOLS.md` → MODEL ROUTING: mentors are a judgment role, so they run on `PLANNING_MODEL` — set it per agent if your client supports that, otherwise they inherit this session's model (confirmed in Step 1.4). An evidence worker on a cheaper model is optional and only for quoted extraction. Workers must not write files; if your client cannot enforce read-only tools, the prompt below says so and Step 3.4b checks for unexpected changes.*
 
 The mentor instructions (read path, critical-thinking pass, report format) live in `[ROOT]/.claude/skills/weekly-review/mentor_prompt.md`; each agent reads that file itself. For each active/seeding domain from Step 1.4, the Agent prompt is exactly:
 
 ```
 You are {{USER_NAME}}'s [DOMAIN] mentor for the S[N] W[W] weekly review. [ROOT] = <absolute path>.
 FIRST read `[ROOT]/.claude/skills/weekly-review/mentor_prompt.md` in full and follow it exactly.
+You are read-only: do not create, edit or delete any file or task; return your report as text.
 WEEK_BRIEF:
 <paste the full WEEK_BRIEF, including TEAM BOARD>
 ```
 
-Each report returns the fields defined there — PREFLIGHT, THREE_MOVES, …, VALUE_CHECK, TEAM_LINE, FOCUS_UPDATE, NEW_LESSON/NEW_FACT, LOG_ENTRY. Mentors never write files; you do, in Phase 4.
+Each report returns the fields defined there — PREFLIGHT, THREE_MOVES, …, NEXT_WEEK_GOALS (each with its `rationale:` and `how:` lines), VALUE_CHECK, TEAM_LINE, FOCUS_UPDATE, NEW_LESSON/NEW_FACT, LOG_ENTRY. Mentors never write files; you do, in Phase 4. A missing report is retried once, then disclosed as a gap for that domain — you do not write that domain's plan yourself (PROTOCOLS.md → DOMAIN OWNERSHIP).
 
 ### PHASE 3 — SYNTHESIS AND CONFLICT RESOLUTION
-*After all mentor agents return.*
+*After all mentor agents return. Bounded rounds per domain: at most one capacity/slot round (3.1–3.2), one PREFLIGHT regeneration (3.4), one relevance round (3.4b).*
 
 **Step 3.1 — Time budget check.** Sum total time requested by all mentors for each weekday.
 - If total ≤ `TIME_CEILING_PER_DAY` (CONFIG.md) on a given weekday: proceed.
-- If over budget: identify the lowest-intensity domain for that day (use season_current.md domain intensities: High > Medium > Low). Send that mentor one targeted follow-up agent: "On [day] you requested [X] min. Total across all domains is [Y] min, ceiling is [ceiling] min. You have [Z] min. Keep your single highest-priority goal for that day. Drop the rest."
+- If over budget: identify the lowest-intensity domain for that day (use season_current.md domain intensities: High > Medium > Low). Send that mentor one targeted follow-up agent: "On [day] you requested [X] min. Total across all domains is [Y] min, ceiling is [ceiling] min. You have [Z] min. Keep your single highest-priority goal for that day. Defer the rest (they stay in your notebook as next candidates unless you withdraw them)."
 - Maximum one additional round per domain.
 
 **Step 3.2 — Slot conflict check.** Check if two domains claim the same locked time slot (e.g., both want Monday 7:30am). If conflict: send back to the lower-priority domain with: "The [slot] on [day] is taken by [domain]. Revise your plan — that slot is unavailable."
 
 **Step 3.3 — Cross-domain integration.** Review all CONCERNS_FOR_COORDINATOR fields from mentor reports.
-- Apply time-stacking where possible (e.g., walk + audiobook = Fitness + Reading in one slot)
+- Apply time-stacking only where `cross_domain.md` or both owning mentors' reports already allow it (e.g., walk + audiobook = Fitness + Reading in one slot); otherwise list it under Proposed changes at Checkpoint 2 rather than altering a mentor's task
 - Resolve dependencies (e.g., a teacher confirmed → update that domain's plan accordingly)
 - Flag any behavioral concerns worth surfacing to {{USER_NAME}} in Phase 5
 
@@ -217,8 +218,12 @@ Each report returns the fields defined there — PREFLIGHT, THREE_MOVES, …, VA
 - **ASKS escalation (mechanical):** any MEMORY.md → ASKS row at Age ≥ 3 is a MANDATORY Mentor Challenge this week — present why it keeps failing and propose a structural change (drop / change owner / change approach). It may not be silently carried. A row at Age 2 gets a named existing-mentor owner and a specific weekly deliverable (Upgrade 2).
 - **PREFLIGHT audit:** scan every report's PREFLIGHT. Any `fail` without a fix, or any report missing the section, is sent back for one regeneration round. Stage every NEW_LESSON / NEW_FACT / `L## violated` for the Phase 4 MEMORY write.
 - If multiple mentors flag the same behavioral pattern (e.g., two domains see avoidance of difficulty increase), consolidate into a single cross-domain challenge.
-- Also apply the coordinator's own critical eye: if a mentor's signal triage seems wrong (e.g., mentor classified a comment as GENUINE INSIGHT but profile.md shows this is a recurring avoidance pattern), override and flag it.
+- Also apply the coordinator's own critical eye: if a mentor's signal triage looks wrong (e.g., a comment was read as GENUINE INSIGHT but `profile.md` records a dated pattern that fits it differently), do not silently override the mentor — put the conflicting evidence to them in the Step 3.4b round, and if they hold their reading, surface both positions at Checkpoint 2.
 - The coordinator is the final filter. Mentor flags that are trivial or clearly resolved by context can be dropped. Only surface challenges that genuinely need {{USER_NAME}}'s input.
+
+**Step 3.4b — Relevance challenge (coordinator → mentor, bounded).** If your notebook is in git, first run `git status --short` and compare with Step 1.4; any change not made by you stops the review here. Then read every NEXT_WEEK_GOAL's `rationale:` line. Challenge a goal when its rationale is missing, rests on a stale or contradicted signal, ignores a prerequisite or dependency another domain reported, repeats work the log shows did not help, or displaces something the season needs more. Send the owning mentor ONE follow-up naming the goal and the specific doubt (e.g. "Why this rather than finishing <existing item>?", "What changes if this waits a week?", "Which evidence says they are ready for the harder version?"). The mentor answers **keep / revise / withdraw** with evidence; one round per domain.
+
+Scope, per `framework/PROTOCOLS.md` → DOMAIN OWNERSHIP: you may defer an item for capacity or block an unsafe or unapproved one; you may **not** write a replacement domain task, change the method, or cut below the mentor's stated minimum. A mentor's `keep` you still doubt becomes a numbered Mentor Challenge at Checkpoint 2 with both positions shown — {{USER_NAME}} decides, not you. Do not challenge every goal; a sound rationale needs no round. Record `challenged N · kept K · revised R · withdrawn W` for Step 4h.
 
 **Step 3.5 — Update `coordinator_state.md` (above the fold, ≤ 14 KB).** The coordinator's own working memory — between-domain attention that no single mentor owns. Re-read the version loaded in Phase 1.
 - Risks · Trade-Offs · Capacity · High-Stakes · Calibration Drift: edit items in place — add, change state, or retire by moving the line below the fold. No dated sections above the fold; the `*Last updated:*` header line carries the one-sentence summary of what changed this review.
@@ -226,7 +231,7 @@ Each report returns the fields defined there — PREFLIGHT, THREE_MOVES, …, VA
 - `## Team board`: one line per active domain, ≤ 40 words, from each mentor's `TEAM_LINE`. Next week's WEEK_BRIEF copies it verbatim — this is how mentors see each other.
 - This update happens BEFORE Checkpoint 2 — so the proposed plan reflects the freshly-updated coordinator state.
 
-**Step 3.6 — VERIFIER (fresh context).** One Agent call. The coordinator wrote the plan and cannot see its own blind spots; a fresh context can. The Agent tool's per-call `model` parameter may be used for this call (optional). Its prompt is:
+**Step 3.6 — VERIFIER (fresh context).** One Agent call, on `PLANNING_MODEL` (a judgment role — `framework/PROTOCOLS.md` → MODEL ROUTING). The coordinator wrote the plan and cannot see its own blind spots; a fresh context can. A failed or missing verifier is a coverage gap, not a pass — disclose it before seeking approval. Its prompt is:
 
 > You did not write this plan and you are not here to like it. Read: (1) the proposed Mon–Sun plan and mentor challenges pasted below; (2) `[ROOT]/mentors/MEMORY.md` above the fold (`sed -n '1,/^## ── HISTORY/p'`); (3) `[ROOT]/mentors/season_current.md` → External Schedule Anchors table; (4) for each active domain, `[ROOT]/mentors/<d>/done_topics.md` and the `## Binding F-ids` + `## Calibration flags` sections of `<d>/current_focus.md`. Return ONLY this block, each line either `none` or a concrete defect quoting the plan line and the conflicting file line:
 > ```
@@ -240,10 +245,11 @@ Each report returns the fields defined there — PREFLIGHT, THREE_MOVES, …, VA
 > - ASKS ages: [no aged ask ignored / lists any Age≥3 not surfaced]
 > - Verified entities: [every company/paper/venue/route named in the plan carries a verified-on date / list those that don't]
 > - Task shape: [every task ≤ 150 words, defines its terms, has DONE-WHEN / list failures]
+> - Domain ownership: [every domain task traces to its mentor's report or a recorded keep/revise; no coordinator-authored domain task, method change or cut below a mentor's stated minimum / list violations]
 > ```
-> [paste: proposed plan, mentor challenges, [ROOT] path, active domain list]
+> [paste: proposed plan, each mentor's NEXT_WEEK_GOALS block verbatim (with its rationale: and minimum: lines), the Step 3.4b challenged / kept / revised / withdrawn record, mentor challenges, [ROOT] path, active domain list]
 
-The coordinator fixes every non-`none` line before Checkpoint 2 (re-running the verifier if the fix was more than a line edit) and pastes the final block into the Checkpoint-2 message under **Self-check**. Count the defects it caught — Step 4h records the number. This pass is the difference between the system catching its own errors and {{USER_NAME}} catching them after the fact.
+The coordinator fixes every non-`none` line before Checkpoint 2 (re-running the verifier if the fix was more than a line edit) and pastes the final block into the Checkpoint-2 message under **Self-check**. A `Domain ownership` defect is returned to the owning mentor, not fixed by the coordinator. If your notebook is in git, re-run `git status --short` after the verifier returns; any change since Step 1.4 not made by you stops the review here. Count the defects it caught — Step 4h records the number. This pass is the difference between the system catching its own errors and {{USER_NAME}} catching them after the fact.
 
 ### ⏸ CHECKPOINT 2 — PLAN APPROVAL
 
@@ -264,7 +270,7 @@ Format:
 
 2. ...
 
-[Max 3 challenges per week. Any Age ≥ 3 ask from Step 3.4 is one of them. If more exist, the coordinator picks the 3 most consequential. Trivial flags get resolved by the coordinator silently. If no flags: omit this section entirely — don't add "no challenges" noise.]
+[Max 3 challenges per week. Any Age ≥ 3 ask from Step 3.4 is one of them. If more exist, the coordinator picks the 3 most consequential. Trivial flags get resolved by the coordinator silently. An unsurfaced or overflow Step 3.4b disagreement defaults to the mentor's position — the coordinator's objection does not win by omission; list overflow items in one line under Proposed changes. If no flags: omit this section entirely — don't add "no challenges" noise.]
 
 ---
 
@@ -340,11 +346,11 @@ All connector signals were already captured in Phase 1 — including unfinished 
    - End each description with: "Full primer in WEEK_BRIEFING.md."
    - **Domain rules are binding here.** Honour each domain's calibration rules from `current_focus.md` (e.g. a music domain: source-material only, no invented phrases; a technical domain: every task needs synthesis/judgment/production).
 
-3. **VALIDATION GATE (reject before writing).** For every task, check: (a) Could it be completed by a single AI query in <10 min as a standalone? → it's a retrieval task; fold it into a harder exercise as context or cut it. (b) Does the description define every term it uses? → if not, add the primer. (c) Does it state DONE-WHEN? → if not, add it. (d) Does it contradict a MEMORY.md → FACTS line or a NEVER-REPEAT row, or re-propose done work? → cut it. (e) Does it violate a domain rule? → fix or cut. A task that fails the gate does not get written.
+3. **VALIDATION GATE — run on the proposed plan BEFORE Checkpoint 2, as input to Step 3.4b and the Step 3.6 verifier; nothing here is decided after approval.** For every task, check: (a) Could it be completed by a single AI query in <10 min as a standalone? → return it to its owning mentor in the 3.4b round as a relevance doubt; you do not fold or cut it yourself. (b) Does the description define every term it uses? → if not, add the primer from the mentor's `how:` line or curriculum pointer (formatting, not authoring). (c) Does it state DONE-WHEN? → if not, complete it from the mentor's goal line. (d) Does it contradict a MEMORY.md → FACTS line or a NEVER-REPEAT row, or re-propose done work? → block it and return it to the mentor; a blocked item is shown at Checkpoint 2. (e) Does it violate a domain rule? → return it to the owning mentor; the mentor fixes or withdraws. After approval, Phase 4 writes the approved text only — a defect discovered now is disclosed and the item left INCOMPLETE, never repaired by authoring.
 
 Result: the connector contains exactly next week's plan, every task self-contained and gate-passed. Nothing else. If no connector is wired: skip this step, note it in Phase 5.
 
-**Step 4a.1 — Write WEEK_BRIEFING.md (the primary read surface).** Write `[ROOT]/WEEK_BRIEFING.md`: the full expert briefing {{USER_NAME}} reads on their phone alongside the checklist. One section per task, grouped by day, each with WHAT / WHY / HOW (step-by-step, with primers) / DONE WHEN / TIME. This is where mentor expertise lives at full fidelity — the connector description is the compressed carry, this is the source. Lead with the week theme + locked slots; include the "Answers you asked for" section (written mentor answers to their open comments — Upgrade 4). This file is overwritten each week (it is this-week-only; TRACKER.md holds history).
+**Step 4a.1 — Write WEEK_BRIEFING.md (the primary read surface).** Write `[ROOT]/WEEK_BRIEFING.md`: the full expert briefing {{USER_NAME}} reads on their phone alongside the checklist. One section per task, grouped by day, each with WHAT / WHY / HOW (step-by-step, with primers) / DONE WHEN / TIME — assembled verbatim from each mentor's goal, `rationale:` and `how:` lines or its curriculum pointer; the coordinator adds day/slot framing only and does not author the HOW. This is where mentor expertise lives at full fidelity — the connector description is the compressed carry, this is the source. Lead with the week theme + locked slots; include the "Answers you asked for" section (written mentor answers to their open comments — Upgrade 4). This file is overwritten each week (it is this-week-only; TRACKER.md holds history).
 
 **Step 4b — Update each domain's log.md.** For each mentor report: append the LOG_ENTRY field verbatim to `[ROOT]/mentors/[domain]/log.md`. Do not edit or reformat the entry. Append only — never overwrite existing entries.
 
@@ -363,7 +369,7 @@ No correction leaves the review unrecorded.
 
 **Step 4c — Update TRACKER.md (if you keep one).** In `[ROOT]/TRACKER.md` (one `## 📅 SEASON [N] — Week [W] …` block per week): (1) mark the past week's block COMPLETED and add its 3-line completion summary (ticked/planned, the value verdict, the headline signal); (2) write the next week's block marked **THIS WEEK** in the same daily format as existing blocks — plan lines only, cross-domain time-stacking already applied (full detail lives in WEEK_BRIEFING.md). Skip if you don't keep a TRACKER.md — WEEK_BRIEFING.md + the connector + logs already hold the plan; Step 4h then writes its line to coordinator_state.md's header instead.
 
-**Step 4d — Update season_current.md (above the fold, ≤ 10 KB).** (1) `## Upcoming dates & disruptions (next 6 weeks)`: edit the table in place — add anything new mentioned this week, drop rows whose date has passed (they already live in TRACKER.md and log.md). (2) Domain States: edit a domain's track note in place if it is significantly off-track. (3) External Schedule Anchors: add any new locked slot confirmed this week, verbatim.
+**Step 4d — Update season_current.md (above the fold, ≤ 10 KB).** (1) `## Upcoming dates & disruptions (next 6 weeks)`: edit the table in place — add anything new mentioned this week, drop rows whose date has passed (they already live in TRACKER.md and log.md). (2) Domain States: edit a domain's track note in place if it is significantly off-track, from the mentor's WEEK_ASSESSMENT, quoted or pointed to. (3) External Schedule Anchors: add any new locked slot confirmed this week, verbatim.
 
 **Step 4e — Apply curriculum adaptations.** For each mentor report with CURRICULUM_ADAPTATION ≠ "no change": read the affected section of `[ROOT]/mentors/[domain]/curriculum.md`; apply the specific change proposed by the mentor (resource swap, pacing change, new milestone, etc.); add a dated comment at the change site: `<!-- Adapted [date]: [reason] -->`. This is how curriculum stays alive. Small changes compound — a curriculum that adapts weekly is fundamentally different from one written once.
 
@@ -375,7 +381,7 @@ Direction is always auto-memory → profile.md. Never write back to auto-memory 
 
 **Step 4g — Year archive (only if this is the first WEEKLY_REVIEW of a new calendar year).** For each domain that had any session activity in the year that just ended, write `[ROOT]/mentors/<domain>/archive/year_<YYYY>.md` using the year-archive template in `templates/domain/README.md`. Source material: every `archive/season_*.md` written within that calendar year. Required sections: year-in-review (3–5 paragraphs covering arc, what stuck, what was dropped, calibration drift across the year, biggest pattern shifts in {{USER_NAME}}'s behaviour in this domain, biggest artifacts produced), season index (one paragraph per season + archive pointer), patterns that crossed seasons. Immutable once written. Skip the step entirely on any other week.
 
-**Step 4h — CORRECTION COUNT.** Append to the TRACKER block of the week just reviewed one line: `CP2 corrections: N · verifier caught: M` — N = the number of distinct mentor errors {{USER_NAME}} corrected at Checkpoint 2 this review; M = defects the Step 3.6 verifier caught before CP2. These two numbers are the system's error series; Phase 5 reports last week's N. (In `automated` mode N is 0 by construction — say so, and report M.)
+**Step 4h — CORRECTION COUNT.** Append to the TRACKER block of the week just reviewed one line: `CP2 corrections: N · verifier caught: M · relevance: challenged C kept K revised R withdrawn W · routing: <model/reasoning, or the weaker tier actually used>` — N = the number of distinct mentor errors {{USER_NAME}} corrected at Checkpoint 2 this review; M = defects the Step 3.6 verifier caught before CP2; the relevance counts come from Step 3.4b; routing from Step 1.4. N and M are the system's error series; Phase 5 reports last week's N. (In `automated` mode N is 0 by construction — say so, and report M.) Over several weeks these lines are the only measurement of whether the planning tier and the relevance round earn their cost.
 
 **Step 4i — BUDGET CHECK (last, before commit)**
 ```bash

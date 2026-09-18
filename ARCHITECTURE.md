@@ -87,20 +87,28 @@ Phase 1  GATHER (coordinator, no agents)
   files touched in 7 days · MEMORY above the fold (ask ages +1) ·
   profile / season / coordinator_state above the fold (Team board) → WEEK_BRIEF
 ⏸ Checkpoint 1 — signal brief (AskUserQuestion; skipped in PROTOCOL_MODE=automated)
-Phase 2  PARALLEL MENTORS — one Agent per active domain, a 3-line call:
-  "read mentor_prompt.md, here is the WEEK_BRIEF" → each reads MEMORY first,
-  intel in full, its own slices → PREFLIGHT · THREE_MOVES · VALUE_CHECK ·
-  TEAM_LINE · FOCUS_UPDATE · NEW_LESSON/NEW_FACT · LOG_ENTRY
+Phase 2  PARALLEL MENTORS — one Agent per active domain (judgment role: PLANNING_MODEL),
+  a short call: "read mentor_prompt.md, here is the WEEK_BRIEF, you are read-only"
+  → each reads MEMORY first, intel in full, its own slices → PREFLIGHT · THREE_MOVES ·
+  NEXT_WEEK_GOALS (+ rationale: / how:) · VALUE_CHECK · TEAM_LINE · FOCUS_UPDATE ·
+  NEW_LESSON/NEW_FACT · LOG_ENTRY
 Phase 3  SYNTHESIS — time/slot/cross-domain; ASKS escalation (Age ≥ 3 = challenge);
+  RELEVANCE CHALLENGE: coordinator questions a goal's rationale, mentor answers
+  keep/revise/withdraw (one round, coordinator may defer or block but never author);
   coordinator_state rewritten in place (Team board) → VERIFIER: a fresh-context
   Agent that did not write the plan returns SELF-CHECK; every defect fixed first
-⏸ Checkpoint 2 — plan + Self-check (count the user's corrections)
-Phase 4  WRITES by file kind — connector + WEEK_BRIEFING · log.md (append) ·
-  done_topics · current_focus (FOCUS_UPDATE) · DRIFT_CHECK · MEMORY.md (by ID) ·
-  TRACKER · season_current · curriculum · profile.md (below fold; promote ≥ 2 wk)
-  → CORRECTION COUNT (CP2 corrections: N · verifier caught: M) → BUDGET CHECK
+⏸ Checkpoint 2 — plan + Self-check (count the user's corrections; unresolved
+  disagreements shown with both positions — the user decides)
+Phase 4  WRITES by file kind — connector + WEEK_BRIEFING (HOW copied from the mentor) ·
+  log.md (append) · done_topics · current_focus (FOCUS_UPDATE) · DRIFT_CHECK ·
+  MEMORY.md (by ID) · TRACKER · season_current · curriculum ·
+  profile.md (below fold; promote ≥ 2 wk)
+  → CORRECTION COUNT (CP2 corrections · verifier caught · relevance · routing)
+  → BUDGET CHECK
 Phase 5  PRESENT — phone-readable; value is the headline, not completion
 ```
+
+**Who owns what.** The mentors own their domains (assessment, method, curriculum, research, the recommendation); the coordinator owns evidence, capacity, sequencing, the checkpoints and the writes. Both can run on the same strong model — capability is not authority, and `framework/PROTOCOLS.md → DOMAIN OWNERSHIP` is what stops the coordinator accumulating the mentors' knowledge over years. `docs/client-setup/` covers binding a role to a model in your client.
 
 ## The pyramid (P8)
 

@@ -74,9 +74,14 @@ The pyramid is why per-session read cost stays bounded as the system ages. The m
 | **Triggered by** | "weekly review", "season review" | "let's do a session on X" |
 | **Reads** | Mentor reports, MEMORY.md, profile.md, coordinator_state.md (above the fold) | MEMORY.md + its own domain folder + profile.md (above the fold) |
 | **Writes** | Synthesis across domains, next-week plan, coordinator_state.md | Its own domain's session page, log, catalog, focus |
-| **Authority** | Trade-offs *between* domains | Calibration *within* its domain |
+| **Owns** | Evidence, cross-domain priority, capacity, sequencing, the checkpoints | Assessment, method, curriculum, research, calibration, the next-step recommendation |
+| **Authority** | Whether a task belongs in the week | How the domain is practised |
 
 The coordinator does **not** override a domain mentor's calibration — but it *can* tell a domain mentor "you're getting only one session this week, plan accordingly". The domain mentor does not override another domain mentor — it can only flag concerns to the coordinator.
+
+**Challenge, don't replace.** A good coordinator argues: it asks a mentor to defend a task's relevance, timing, evidence and trade-off, and the mentor answers *keep / revise / withdraw* with evidence. What it may not do is author a replacement task, change a mentor's method, cut an exercise below the mentor's stated minimum, or quietly cover a domain whose mentor report failed. Unresolved disagreement goes to you with both positions shown — you decide.
+
+That line matters more the longer the system runs. Both roles can run on the same strong model; capability is not authority. If the coordinator gradually absorbs each mentor's knowledge, in a year you have one tangled intelligence and no file with a single owner — which is exactly what the layer pyramid (P8) and `framework/PROTOCOLS.md → DOMAIN OWNERSHIP` exist to prevent. `coordinator_state.md` holds decisions and pointers; domain teaching material stays in the domain folder, and a weekly drift check moves it back if it strays.
 
 ---
 

@@ -49,14 +49,17 @@ The 3-step pass (signal triage / devil's advocate / historical pattern gate) is 
 
 - Bump `COMM_TONE`.
 - At the start of any session, paste: *"Before giving recommendations, run the critical-thinking pass from PROTOCOLS.md."*
-- Consider using a model with stronger reasoning for the coordinator role (e.g. a frontier model for weekly reviews; a faster model is fine for individual domain sessions).
+- The coordinator's reconciliation is judgment work too, not orchestration — see `framework/PROTOCOLS.md` → MODEL ROUTING before assigning it a cheap model.
 
 ## 7. Splitting the model layer
 
-The protocols don't enforce one model. A common split:
+The protocols don't enforce one model, but they do say where the money belongs: **economize on collection and formatting, not on judgment** (`framework/PROTOCOLS.md` → MODEL ROUTING). Set `CONFIG.md → PLANNING_MODEL` to the strongest model you have and use it for:
 
-- **Coordinator** (runs WEEKLY_REVIEW, MENTOR_REFRESH) — a fast, cheap, good-at-orchestration model is fine. Sonnet / GPT-4o-mini / Gemini Flash class.
-- **Domain mentors** (run DOMAIN_SESSION) — use the strongest reasoning model you have access to. This is where critical-thinking pays for itself. Opus / Sonnet-thinking / o1 / Gemini Pro thinking class.
+- **Domain mentors' weekly reports and next-step proposals** — choosing what you should do next week is the highest-leverage judgment in the system, in *every* domain, not only the technical ones.
+- **The coordinator's weekly reconciliation** — it decides what deserves a place in your week, argues a task's relevance with the owning mentor, and weighs capacity against the season. A weaker model here quietly undoes good mentor work. (Routine clerical passes — a drift check, a catalog reconciliation, a MENTOR_REFRESH lookup — are fine on anything.)
+- **The fresh-context verifier** — it is the last check before you see the plan.
+
+Cheap tiers earn their place on fetching, extracting and formatting, provided their output is a quoted extract with locators rather than a summary that becomes the only version of a signal a mentor ever sees.
 
 If you only have one model, use it everywhere. The system was designed against a single capable model.
 

@@ -183,6 +183,46 @@ Ask explicitly: *"Did I get this right? Anything I misread before we lock it in?
 
 ---
 
+## MODEL ROUTING
+
+Most clients let you pick a model, and some let a coordinator dispatch mentor agents on a different one. Two steps of the week are expensive to get wrong: a **mentor choosing what you should do next**, and the **coordinator deciding what deserves a place in your week**. Both are judgment. Fetching tasks, extracting quotes and formatting a briefing are not.
+
+**The rule: economize on collection and formatting, not on judgment.** Set `CONFIG.md → PLANNING_MODEL` to the strongest model you have access to, and use it for the roles marked *judgment* below. These are execution roles, not extra mentors — domain identity stays in `current_focus.md → Stance`, and DOMAIN OWNERSHIP (next section) governs what each role may decide.
+
+| Role | Tier | Use |
+|---|---|---|
+| Domain mentor | `PLANNING_MODEL` — judgment | The weekly mentor report and the next-step proposal (WEEKLY_REVIEW Phase 2); keep / revise / withdraw answers in the relevance round. |
+| Coordinator | `PLANNING_MODEL` — judgment | Evidence brief, relevance challenge, reconciliation, the checkpoints, applying approved changes. |
+| Verifier | `PLANNING_MODEL` — judgment, fresh context | The Phase 3 defect pass. Never the author of what it checks. |
+| Evidence worker *(optional)* | a cheaper model, or plain tool calls | Fetch, extract, compare. Use one only when its output is a quoted extract with locators — never as the only path a signal takes to a mentor. |
+| Maintenance | any capable model | DRIFT_CHECK clerical checks, `done_topics` reconciliation, MENTOR_REFRESH lookups, DOMAIN_SESSION drafts (consequential strategy or safety escalates to the Domain-mentor row). |
+
+Binding a role to a model is client-specific: see `docs/client-setup/` for your client. Two facts hold across clients and are worth checking before you trust a tier:
+
+- **Agents you dispatch may silently inherit the parent's model and reasoning level.** If your client has no per-agent model setting, the reliable route is to *start the review in a session on `PLANNING_MODEL`* so the mentors inherit it. Confirm the live model before dispatching rather than assuming a saved default applied.
+- **A long context window is not the same as a long usable window.** Providers cap input below the advertised figure, and many clients compact the conversation at a fraction of the window. If a mentor run compacts mid-report, record it — that is lost evidence, not a stylistic detail.
+
+Common rules regardless of client: the coordinator supplies the domain, the task, the notebook path and the approved evidence brief; workers are read-only and the coordinator is the sole writer; an evidence worker never replaces a mentor's own mandatory reads (especially the full `intel.md`); a verifier is a fresh invocation, not the author re-reading itself; a missing report is retried once and then **disclosed as a gap** — the coordinator does not quietly cover that domain; no nested fan-out. If your client cannot give a worker read-only tools, say so in the worker's instructions and check the notebook for unexpected changes after it returns.
+
+Before claiming a routing change improved anything, compare the same evidence under the same rubric and record the resolved model, reasoning level, missing reports, compactions, verifier defects and the corrections you had to make at the plan checkpoint. Smaller files are not measured savings, and a model preference is not a tested result.
+
+---
+
+## DOMAIN OWNERSHIP
+
+A capable coordinator is useful: it should question whether a task deserves your week. But capability is not authority. The failure this section prevents is slow and hard to reverse — a coordinator that gradually accumulates each mentor's knowledge until, a year later, the layers are one tangled intelligence and no file has a single owner.
+
+- **Domain mentor owns** the domain assessment, methods and technique, curriculum position and adaptation, `intel.md`, domain research and lookup, difficulty calibration, and the substantive next-step recommendation with its rationale. Domain teaching material lives only in `mentors/<domain>/`.
+- **Coordinator owns** the evidence brief (tasks, comments, artifacts, dates), cross-domain priorities, capacity and slot arithmetic, dependency ordering, rule/fact/safety compliance, the checkpoints, and applying approved changes. It judges whether a task belongs in the week — not how the domain should be practised.
+- **Challenge, don't replace.** The coordinator may ask a mentor to defend relevance, timing, evidence, prerequisites and trade-off (WEEKLY_REVIEW Step 3.4b). The mentor answers **keep / revise / withdraw** with evidence. The coordinator may defer an item for capacity or block an unsafe or unapproved one, but it cannot author a replacement domain task, alter a mentor's method, or cut an exercise below the mentor's stated minimum. A missing or failed mentor report is a disclosed gap; the coordinator **cannot act as a substitute mentor** for that domain.
+- **No shadow domain memory.** `coordinator_state.md` holds owner-tagged decisions, dependencies, watches and pointers into the domain notebook — never curriculum, technique notes or research a mentor should own. Coordinator text that starts teaching a domain is moved to the owning notebook (DRIFT_CHECK check 10).
+- **Unresolved disagreement goes to you**, at the plan checkpoint, with the mentor's position intact and the coordinator's objection beside it. Two runs of the same model agreeing is not independent evidence about you.
+- The fresh verifier finds defects; it does not take ownership either.
+
+This is why only the principal hires mentors (SYSTEM UPGRADES → GOVERNANCE): a recurring need is given to an existing owner, not absorbed by the coordinator.
+
+---
+
 ## PROTOCOL: WEEKLY_REVIEW → moved to skill
 
 **Canonical text now lives at `.claude/skills/weekly-review/SKILL.md`**, with the mentor agents' instructions in `.claude/skills/weekly-review/mentor_prompt.md` (installable so the procedure loads verbatim on trigger instead of depending on this whole manual being read — predictable, repeatable, and cheaper: the trigger loads only its own text; each mentor agent loads only `mentor_prompt.md`).
@@ -309,6 +349,7 @@ Silent domains are skipped. This protocol only touches `intel.md`; it does not j
 8. **MEMORY.md → FACTS reconciliation** (cross-system, coordinator-run once per WEEKLY_REVIEW, not per domain):
    For each row in `mentors/MEMORY.md → FACTS`, check the named canonical-home file still states the same value. If the home has changed and FACTS is stale → update FACTS. If FACTS is right and the home drifted (e.g. a stale upcoming-dates row) → fix the home. This is the validator that keeps the pointer layer honest (prevents the very drift a second fact-store risks). Report reconciliations in the DRIFT REPORT.
 9. **Fold health**: each of the five fold files (`MEMORY.md`, `profile.md`, `coordinator_state.md`, `season_current.md`, this domain's `current_focus.md`) has exactly one fold line (`grep -c '^## ── HISTORY'` = 1) and its top half is within budget (the WEEKLY_REVIEW Phase-4 BUDGET CHECK command). Over budget or a dated `##` header above the fold → move content below the fold now; never delete.
+10. **Ownership drift** (coordinator-run once per WEEKLY_REVIEW, not per domain; see DOMAIN OWNERSHIP): `coordinator_state.md` above the fold carries no domain teaching material — no technique, curriculum, exercise prescription or domain research. Anything of that kind is proposed for a move to the owning domain's notebook, with a pointer left behind. Report `Ownership: clean` or the lines to move.
 
 ### Output
 
@@ -324,6 +365,7 @@ DRIFT REPORT — <domain> (<date>)
 - Calibration flags: <N active, M aged>
 - FACTS reconciliation: <N checked / any stale fixed>
 - Fold health: <one fold line, top half N KB / budget · or the defect>
+- Ownership: <clean · or coordinator lines to move to the owning notebook (coordinator-run only)>
 Actions taken: <list of edits>
 Actions proposed: <list of items needing user input>
 ```

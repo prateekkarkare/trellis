@@ -101,7 +101,7 @@ Full statement: [core/FIRST_PRINCIPLES.md](core/FIRST_PRINCIPLES.md)
 
 Right now Trellis is set up and supported on **Claude Cowork** — that's the one path we document end to end, so it's reliable. Full step-by-step: **[docs/quickstart.md](docs/quickstart.md)**.
 
-Under the hood the framework is just markdown and plain protocols — nothing is Claude-specific by design, so other file-reading assistants can run it too. Notes for other clients live in [docs/client-setup/](docs/client-setup/) but aren't first-class yet. We're keeping the supported surface small on purpose until the Cowork flow is rock-solid.
+Under the hood the framework is just markdown and plain protocols — nothing is Claude-specific by design, so other file-reading assistants can run it too. Notes for other clients live in [docs/client-setup/](docs/client-setup/) — [Claude Code](docs/client-setup/claude-code.md), [Hermes Agent](docs/client-setup/hermes.md), [Claude Desktop](docs/client-setup/claude-desktop.md), [ChatGPT](docs/client-setup/chatgpt.md), [GitHub Copilot](docs/client-setup/github-copilot.md) — but aren't first-class yet. We're keeping the supported surface small on purpose until the Cowork flow is rock-solid.
 
 ---
 

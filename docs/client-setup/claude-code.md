@@ -60,7 +60,11 @@ Claude Code's `Task` tool supports parallel subagent invocation. In WEEKLY_REVIE
 
 ## Recommended models
 
+Planning and coordination are the judgment roles (`framework/PROTOCOLS.md` → MODEL ROUTING) — set `CONFIG.md → PLANNING_MODEL` to your strongest tier and use it for mentor reports, reconciliation and the verifier.
+
 - **/model opus** (or strongest available) for weekly reviews and high-stakes domain sessions.
-- **/model sonnet** for routine sessions to save cost.
+- **/model sonnet** for routine maintenance and clerical passes to save cost.
 
 You can switch models mid-session with `/model`.
+
+**Per-agent models.** Claude Code subagents defined in `.claude/agents/*.md` each carry their own `model:` field, so you can pin the weekly-review mentors and verifier to your strongest tier and leave extraction on a cheap one. Two cautions: `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` or a per-call override can silently defeat that pinning, so check before you trust it; and a subagent's `tools:` allowlist is what actually makes a worker read-only — name only read/search tools and exclude write/edit tools for mentor and verifier roles.

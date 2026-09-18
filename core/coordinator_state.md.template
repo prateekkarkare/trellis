@@ -1,6 +1,7 @@
 # Coordinator State
 *Budget (above the fold): ≤ 14 KB. The coordinator's between-domain working memory — the equivalent of `current_focus.md` for the coordinator itself. Read up to the HISTORY fold only: `sed -n '1,/^## ── HISTORY/p' mentors/coordinator_state.md`. Write rule: edit items in place; Active Watches are THIS WEEK ONLY and are rewritten in full at each review (the outgoing set moves below the fold verbatim); one line per item, each ending with `(set YYYY-MM-DD · clears when: …)`; never add a dated section above the fold. Last updated: <date of last review>.*
 *Owned by: the coordinator (edited during WEEKLY_REVIEW Phase 3 step 3.5). Read by: the coordinator at the start of every WEEKLY_REVIEW and by Domain Mentors with `Stakes: high_external` in their `current_focus.md`.*
+*Scope limit (PROTOCOLS.md → DOMAIN OWNERSHIP): this file holds owner-tagged decisions, dependencies, watches and pointers into the domain notebooks — never curriculum, technique notes, exercise prescriptions or domain research. Anything that starts teaching a domain belongs in that domain's folder; DRIFT_CHECK check 10 moves it back.*
 
 > **Recurring asks live in `MEMORY.md → ASKS`, not here (P8: one ask, one home).** This file may *reference* an ask for cross-domain context, but the age/owner/status ledger and the mechanical age-based escalation belong to `mentors/MEMORY.md → ASKS`. Do not re-track an ask's age here.
 
