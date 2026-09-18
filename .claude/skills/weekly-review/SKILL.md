@@ -7,7 +7,7 @@ description: Run the WEEKLY_REVIEW protocol for the mentor team. Use when {{USER
 
 *This skill is the canonical text for WEEKLY_REVIEW. It is carved out of `framework/PROTOCOLS.md` so it loads verbatim on trigger instead of depending on the whole manual being read. If the skill mechanism is unavailable, read this file directly — it is plain, self-contained markdown. MONTHLY_REVIEW and SEASON_TRANSITION (in `framework/PROTOCOLS.md`) extend this procedure. The mentor agents' instructions live in `[ROOT]/.claude/skills/weekly-review/mentor_prompt.md`.*
 
-**PATH DISCOVERY (run first):** `[ROOT]` is the notebook root — the directory that contains `CLAUDE.md` and `mentors/`. If the working directory isn't it:
+**PATH & DATE DISCOVERY (run first):** Run `date` first and take "today" only from it — never from the conversation, file timestamps, or {{USER_NAME}}'s day references; compute every review-window date from the shell clock (miscounting the week has corrupted schedules before). Then find `[ROOT]`, the notebook root — the directory that contains `CLAUDE.md` and `mentors/`. If the working directory isn't it:
 ```bash
 find ~ /sessions -maxdepth 6 -name MEMORY.md -path '*/mentors/*' -not -path '*/.git/*' 2>/dev/null | head -1
 ```

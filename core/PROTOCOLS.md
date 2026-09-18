@@ -21,7 +21,9 @@ Architectural posture (full statement: `FIRST_PRINCIPLES.md`, P1–P9):
 
 ---
 
-## PATH DISCOVERY (run at the start of every protocol)
+## PATH & DATE DISCOVERY (run at the start of every protocol)
+
+**The date first — always, unconditionally.** Run `date` (or `TZ=<your-timezone> date`) at the very start of every run and take "today" only from its output. Never infer the current date from conversation context, file timestamps, or {{USER_NAME}}'s own day references ("yesterday I did X", "let's start Monday") — those are ambiguous or stale often enough that trusting them has caused real schedule-corruption incidents (tasks deleted and recreated on the wrong day, review windows miscounted). The shell clock is the only source of truth for "today", and it matters most immediately before any schedule/task create/edit/reschedule/delete. This is the first line of the step every protocol already runs, so it cannot be skipped.
 
 All protocols reference files in the {{WORKSPACE_NAME}} notebook. `[ROOT]` is the notebook root — the directory that contains `CLAUDE.md` and `mentors/` (the principles live at `[ROOT]/framework/FIRST_PRINCIPLES.md`). If your client mounts the notebook at a stable path, `[ROOT]` is simply the notebook folder. If the working directory isn't it:
 
@@ -74,7 +76,7 @@ INTAKE has two parts, mirroring how you'd actually build a team of coaches aroun
 
 > **Shapes.** First-run: Part A once → Part B for mentor 1 → Part B for mentor 2 → … . Later hire: (confirm Part A) → Part B for the new mentor. Never re-run Part A from scratch if `profile.md` already has a real Identity.
 
-Discover `[ROOT]` (PATH DISCOVERY above) before anything. Run each part as a flowing conversation — a few questions at a time, reflect back what you heard before moving on, and let {{USER_NAME}} stop and resume across sittings (write progress as you go so an interruption loses nothing).
+Discover `[ROOT]` (PATH & DATE DISCOVERY above) before anything. Run each part as a flowing conversation — a few questions at a time, reflect back what you heard before moving on, and let {{USER_NAME}} stop and resume across sittings (write progress as you go so an interruption loses nothing).
 
 ---
 

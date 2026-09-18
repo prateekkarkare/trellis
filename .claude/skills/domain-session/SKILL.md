@@ -7,7 +7,7 @@ description: Run a single-domain mentoring session. Use when {{USER_NAME}} says 
 
 *This skill is the canonical text for DOMAIN_SESSION. It is carved out of `framework/PROTOCOLS.md` so it loads verbatim on trigger instead of depending on the whole manual being read. If the skill mechanism is unavailable, read this file directly — it is plain, self-contained markdown.*
 
-**PATH DISCOVERY (run first):** `[ROOT]` is the notebook root — the directory that contains `CLAUDE.md` and `mentors/`. If the working directory isn't it:
+**PATH & DATE DISCOVERY (run first):** Run `date` first and take "today" only from it — never from the conversation, file timestamps, or {{USER_NAME}}'s day references ("yesterday", "let's start Monday"); trusting context has corrupted schedules before, and it matters most right before any task create/edit/reschedule. Then find `[ROOT]`, the notebook root — the directory that contains `CLAUDE.md` and `mentors/`. If the working directory isn't it:
 ```bash
 find ~ /sessions -maxdepth 6 -name MEMORY.md -path '*/mentors/*' -not -path '*/.git/*' 2>/dev/null | head -1
 ```
