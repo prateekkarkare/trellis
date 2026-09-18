@@ -291,7 +291,7 @@ A personal mentor's-notebook built on [Trellis](https://github.com/your/Trellis)
 - \`mentors/coordinator_state.md\` — the coordinator's working memory
 - \`mentors/MEMORY.md\` — lessons, facts, and open asks; the mentor reads this every session and writes your corrections back to it
 - \`mentors/cross_domain.md\` — bridges between domains
-- \`framework/\` — copies of the protocol docs (replace by re-running init.sh after a framework update)
+- \`framework/\` — copies of the protocol docs (refresh with \`scripts/migrate.sh\` after a framework update — never re-run \`init.sh\` on a populated notebook)
 
 ## Common commands
 
